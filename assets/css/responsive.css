@@ -1,0 +1,458 @@
+
+/* =========================================================
+   PORTAFOLIO PROFESIONAL — SHAIRETH CARVAJAL
+   FASE 2 | BLOQUE 2.3 | DISEÑO RESPONSIVE
+   ========================================================= */
+
+
+/* =========================================================
+   1. TABLETAS Y PANTALLAS MEDIANAS
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    :root {
+        --header-height: 68px;
+    }
+
+    /* Navegación */
+    .header-container {
+        width: calc(100% - 32px);
+    }
+
+    .nav-list {
+        gap: 8px 13px;
+    }
+
+    .nav-list a {
+        font-size: 0.76rem;
+    }
+
+    .main-navigation {
+        gap: 12px;
+    }
+
+    /* Presentación principal */
+    .hero-container {
+        gap: 45px;
+    }
+
+    .profile-image {
+        width: min(100%, 320px);
+    }
+
+    /* Tarjetas */
+    .research-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+/* =========================================================
+   2. TABLETAS PEQUEÑAS Y CELULARES GRANDES
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    /* Cabecera panorámica */
+    .header-banner,
+    .header-banner-overlay {
+        min-height: 230px;
+    }
+
+    .header-banner {
+        background-position: center;
+    }
+
+    .header-banner-overlay {
+        padding: 24px;
+    }
+
+    .brand-subtitle {
+        font-size: 1rem;
+    }
+
+
+.header-container {
+    min-height: 62px;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+/* Botón del menú móvil */
+.menu-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 42px;
+    height: 42px;
+    padding: 10px;
+    margin-right: auto;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--text-primary);
+}
+
+/* Controles de idioma y tema */
+.navigation-controls {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-left: auto;
+    padding: 0;
+    border: none;
+    flex-shrink: 0;
+}
+
+/* Menú desplegable */
+.main-navigation {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: -16px;
+    right: -16px;
+    z-index: 1001;
+    width: auto;
+    padding: 20px;
+    background: var(--header-background);
+    border: 1px solid var(--border);
+    border-top: none;
+    box-shadow: 0 12px 24px var(--shadow);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+}
+
+.main-navigation.active {
+    display: flex;
+}
+
+.nav-list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+}
+
+.nav-list li {
+    width: 100%;
+}
+
+.nav-list a {
+    display: block;
+    width: 100%;
+    padding: 11px 8px;
+    font-size: 0.9rem;
+}
+
+.nav-list a.active::after {
+    width: 30px;
+    bottom: 4px;
+}
+
+
+    /* Botón del menú móvil */
+    .menu-toggle {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        width: 42px;
+        height: 42px;
+        padding: 10px;
+        margin-right: auto;
+    }
+
+    .menu-toggle span {
+        display: block;
+        width: 100%;
+        height: 2px;
+        border-radius: 2px;
+        background: var(--text-primary);
+    }
+
+    /* Menú desplegable */
+    .main-navigation {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: -16px;
+        right: -16px;
+        z-index: 1001;
+        width: auto;
+        padding: 20px;
+        background: var(--header-background);
+        border: 1px solid var(--border);
+        border-top: none;
+        box-shadow: 0 12px 24px var(--shadow);
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    .main-navigation.active {
+        display: flex;
+    }
+
+    .nav-list {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+    }
+
+    .nav-list li {
+        width: 100%;
+    }
+
+    .nav-list a {
+        display: block;
+        width: 100%;
+        padding: 11px 8px;
+        font-size: 0.9rem;
+    }
+
+    .nav-list a.active::after {
+        width: 30px;
+        bottom: 4px;
+    }
+
+    .navigation-controls {
+        justify-content: flex-end;
+        margin-left: 0;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+    }
+
+    /* Presentación principal */
+    .hero-section {
+        min-height: auto;
+        padding-top: 65px;
+        padding-bottom: 65px;
+    }
+
+    .hero-container {
+        grid-template-columns: 1fr 0.8fr;
+        gap: 30px;
+    }
+
+    .hero-content h1 {
+        font-size: clamp(2rem, 5vw, 3rem);
+    }
+
+    .profile-image {
+        width: min(100%, 280px);
+    }
+
+    /* Secciones */
+    section {
+        padding: 75px 0;
+    }
+
+    .projects-grid {
+        gap: 18px;
+    }
+}
+
+
+/* =========================================================
+   3. CELULARES
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    /* Contenedores */
+    .section-container,
+    .header-container,
+    .footer-container {
+        width: calc(100% - 36px);
+    }
+
+    section {
+        padding: 60px 0;
+    }
+
+    .section-heading {
+        margin-bottom: 32px;
+    }
+
+    .section-heading h2 {
+        font-size: 1.9rem;
+    }
+
+    /* Cabecera panorámica */
+    .header-banner,
+    .header-banner-overlay {
+        min-height: 205px;
+    }
+
+    .header-banner {
+        background-position: center;
+    }
+
+    .header-banner-overlay {
+        padding: 20px 18px;
+    }
+
+    .brand-subtitle {
+        font-size: 0.88rem;
+        line-height: 1.5;
+    }
+
+    .quote-author {
+        font-size: 0.82rem;
+        margin-right: 12px;
+    }
+
+    /* Menú */
+    .main-navigation {
+        left: -18px;
+        right: -18px;
+    }
+
+    /* Presentación principal */
+    .hero-section {
+        padding-top: 45px;
+        padding-bottom: 55px;
+    }
+
+    .hero-container {
+        grid-template-columns: 1fr;
+        gap: 35px;
+    }
+
+    .hero-image {
+        order: -1;
+    }
+
+    .profile-image {
+        width: min(75%, 280px);
+        max-height: 340px;
+    }
+
+    .hero-content {
+        text-align: center;
+    }
+
+    .hero-content h1 {
+        font-size: 2.35rem;
+    }
+
+    .hero-content h2 {
+        font-size: 1.15rem;
+    }
+
+    .hero-description {
+        font-size: 0.94rem;
+    }
+
+    .hero-actions {
+        justify-content: center;
+    }
+
+    /* Experiencia e investigación */
+    .experience-card {
+        padding: 21px;
+    }
+
+    .experience-header {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .research-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .research-card {
+        padding: 22px;
+    }
+
+    /* Proyectos */
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .project-content {
+        padding: 21px;
+    }
+
+    .project-image-placeholder {
+        min-height: 190px;
+    }
+
+    .project-filters {
+        gap: 8px;
+    }
+
+    .filter-button {
+        padding: 8px 12px;
+        font-size: 0.76rem;
+    }
+
+    /* Habilidades */
+    .skills-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .skill-group {
+        padding: 22px;
+    }
+
+    /* Formación */
+    .education-card {
+        padding: 23px;
+    }
+
+    /* Mapa */
+    .map-container {
+        min-height: 330px;
+    }
+
+    /* Contacto */
+    .contact-links {
+        flex-direction: column;
+    }
+
+    .contact-links a {
+        justify-content: center;
+    }
+
+    /* Pie de página */
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+
+/* =========================================================
+   4. CELULARES MUY PEQUEÑOS
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .brand-subtitle {
+        font-size: 0.8rem;
+    }
+
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .hero-content h2 {
+        font-size: 1rem;
+    }
+
+    .profile-image {
+        width: 85%;
+    }
+
+    .section-heading h2 {
+        font-size: 1.7rem;
+    }
+}

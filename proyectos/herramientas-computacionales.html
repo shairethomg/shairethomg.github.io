@@ -1,0 +1,685 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Herramientas computacionales con Python aplicadas a problemas geológicos. Cuatro casos de estudio presentados en la XXVI Semana Técnica de Geología.">
+  <title>Herramientas computacionales para las geociencias | Shaireth Carvajal</title>
+
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/themes.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --project-blue: #4A536D;
+      --project-sand: #D8C5A5;
+      --project-ochre: #B87943;
+      --project-terracotta: #A65F50;
+      --project-moss: #687C62;
+      --page-background: #F4F2ED;
+      --page-surface: #FFFFFF;
+      --page-text: #303746;
+      --page-muted: #697386;
+      --page-border: rgba(74, 83, 109, 0.16);
+    }
+
+    :root[data-theme="dark"] {
+      --page-background: #171B24;
+      --page-surface: #222936;
+      --page-text: #E9EAF0;
+      --page-muted: #AAB2C0;
+      --page-border: rgba(216, 197, 165, 0.18);
+    }
+
+    body {
+      background: var(--page-background);
+      color: var(--page-text);
+      font-family: "Inter", sans-serif;
+    }
+
+    .detail-page {
+      width: min(1080px, 90%);
+      margin: 0 auto;
+      padding: 28px 0 42px;
+    }
+
+    .detail-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 34px;
+    }
+
+    .detail-back {
+      color: var(--project-blue);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    :root[data-theme="dark"] .detail-back {
+      color: var(--project-sand);
+    }
+
+    .detail-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .detail-category {
+      color: var(--project-ochre);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .detail-title {
+      color: var(--page-text);
+      font-family: "Poppins", sans-serif;
+      font-size: clamp(1.8rem, 4.5vw, 2.7rem);
+      line-height: 1.2;
+      margin: 0 0 12px;
+    }
+
+    .detail-meta {
+      color: var(--page-muted);
+      font-size: 0.9rem;
+      margin-bottom: 22px;
+      line-height: 1.6;
+    }
+
+    .detail-intro {
+      max-width: 950px;
+      background: var(--page-surface);
+      border-left: 4px solid var(--project-ochre);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 0 0 28px !important;
+      line-height: 1.75;
+      color: var(--page-text);
+    }
+
+    .detail-section {
+      margin: 26px 0 0 !important;
+      padding: 0 !important;
+      min-height: 0 !important;
+    }
+
+    .detail-section h2 {
+      font-family: "Poppins", sans-serif;
+      color: var(--page-text);
+      font-size: 1.35rem;
+      margin: 0 0 10px !important;
+      padding: 0 !important;
+    }
+
+    .detail-section > p {
+      color: var(--page-muted);
+      line-height: 1.7;
+      margin: 0 0 16px !important;
+      padding: 0 !important;
+    }
+
+    .section-symbol {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: rgba(184, 121, 67, 0.13);
+      color: var(--project-ochre);
+      margin-right: 9px;
+      font-size: 1.05rem;
+      vertical-align: middle;
+    }
+
+    /* Autores */
+
+    .authors-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .author-card {
+      background: var(--page-surface);
+      border: 1px solid var(--page-border);
+      border-radius: 10px;
+      padding: 17px 12px;
+      text-align: center;
+    }
+
+    .author-symbol {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 9px;
+      border-radius: 50%;
+      background: rgba(74, 83, 109, 0.11);
+      color: var(--project-blue);
+      font-size: 1.1rem;
+    }
+
+    :root[data-theme="dark"] .author-symbol {
+      color: var(--project-sand);
+    }
+
+    .author-card h3 {
+      color: var(--page-text);
+      font-family: "Poppins", sans-serif;
+      font-size: 0.88rem;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    /* Tabla de investigaciones */
+
+    .research-table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--page-border);
+      border-radius: 12px;
+      background: var(--page-surface);
+      margin-top: 16px;
+    }
+
+    .research-table {
+      width: 100%;
+      min-width: 720px;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .research-table th {
+      background: var(--project-blue);
+      color: #FFFFFF;
+      font-family: "Poppins", sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 15px 17px;
+    }
+
+    .research-table td {
+      color: var(--page-text);
+      padding: 17px;
+      border-bottom: 1px solid var(--page-border);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      vertical-align: middle;
+    }
+
+    .research-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .research-table tbody tr:hover {
+      background: rgba(216, 197, 165, 0.10);
+    }
+
+    .case-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 29px;
+      height: 29px;
+      border-radius: 8px;
+      background: rgba(184, 121, 67, 0.14);
+      color: var(--project-ochre);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-right: 8px;
+    }
+
+    .case-name {
+      color: var(--project-blue);
+      font-weight: 700;
+    }
+
+    :root[data-theme="dark"] .case-name {
+      color: var(--project-sand);
+    }
+
+    .tool-tag {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 6px;
+      background: rgba(104, 124, 98, 0.12);
+      color: var(--project-moss);
+      font-size: 0.76rem;
+      font-weight: 600;
+      margin: 2px 3px 2px 0;
+      white-space: nowrap;
+    }
+
+    :root[data-theme="dark"] .tool-tag {
+      color: #B9D0B2;
+      background: rgba(104, 124, 98, 0.22);
+    }
+
+    /* Productos */
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .product-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--page-surface);
+      border: 1px solid var(--page-border);
+      border-radius: 12px;
+      padding: 22px;
+      min-height: 190px;
+    }
+
+    .product-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 11px;
+      background: rgba(74, 83, 109, 0.12);
+      font-size: 1.4rem;
+      margin-bottom: 13px;
+    }
+
+    .github-icon svg {
+  width: 27px;
+  height: 27px;
+  display: block;
+}
+    .product-card h3 {
+      color: var(--page-text);
+      font-family: "Poppins", sans-serif;
+      font-size: 1.05rem;
+      margin: 0 0 7px;
+    }
+
+    .product-card p {
+      color: var(--page-muted);
+      font-size: 0.86rem;
+      line-height: 1.6;
+      margin: 0 0 17px;
+    }
+
+    .product-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--project-terracotta);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: auto;
+    }
+
+    .product-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Póster */
+
+    .poster-frame {
+      background: var(--page-surface);
+      border: 1px solid var(--page-border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .poster-image {
+      display: block;
+      width: 100%;
+      max-width: 850px;
+      height: auto;
+      margin: 0 auto;
+      border-radius: 5px;
+    }
+
+    .poster-caption {
+      color: var(--page-muted);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin: 13px 5px 2px;
+    }
+
+    .detail-footer {
+      border-top: 1px solid rgba(74, 83, 109, 0.20);
+      margin-top: 36px;
+      padding-top: 18px;
+      color: var(--page-muted);
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    @media (max-width: 760px) {
+      .authors-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .detail-page {
+        width: 92%;
+        padding-top: 20px;
+      }
+
+      .detail-topbar {
+        margin-bottom: 26px;
+      }
+
+      .detail-intro {
+        padding: 17px;
+      }
+
+      .poster-frame {
+        padding: 8px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .detail-topbar {
+        align-items: flex-start;
+      }
+
+      .detail-back {
+        font-size: 0.82rem;
+      }
+
+      .authors-grid {
+        gap: 8px;
+      }
+
+      .author-card {
+        padding: 14px 8px;
+      }
+
+      .author-card h3 {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="detail-page">
+
+    <div class="detail-topbar">
+      <a class="detail-back" href="../index.html#proyectos">← Volver a proyectos</a>
+
+      <div class="detail-controls">
+        <button id="language-toggle" class="language-toggle notranslate"
+          type="button" aria-label="Cambiar idioma" translate="no">EN</button>
+
+        <button id="theme-toggle" class="theme-toggle"
+          type="button" aria-label="Cambiar tema" aria-pressed="false">
+          <span class="theme-icon">☾</span>
+        </button>
+      </div>
+    </div>
+
+    <header>
+      <div class="detail-category">
+        Geología computacional · Python · Automatización
+      </div>
+
+      <h1 class="detail-title">
+        Herramientas computacionales para las ciencias de la Tierra:
+        uso de Python para resolver problemas geológicos
+      </h1>
+
+      <div class="detail-meta">
+        Proyecto colaborativo · 2024 · SIGAC · UIS
+        <br>
+        Póster presentado en la XXVI Semana Técnica de Geología,
+        Ingeniería Geológica y Geociencias
+      </div>
+    </header>
+
+    <p class="detail-intro">
+      Este trabajo reúne cuatro aplicaciones de herramientas computacionales
+      para resolver problemas geológicos. Mediante Python, programación
+      y herramientas de libre acceso, se desarrollaron procedimientos
+      orientados a automatizar tareas, facilitar el análisis de datos
+      y optimizar procesos en las geociencias.
+    </p>
+
+    <section class="detail-section">
+      <h2>
+        <span class="section-symbol" aria-hidden="true">♧</span>
+        Autores
+      </h2>
+
+      <div class="authors-grid">
+        <article class="author-card">
+          <div class="author-symbol" aria-hidden="true">👤</div>
+          <h3>Ana Mantilla</h3>
+        </article>
+
+        <article class="author-card">
+          <div class="author-symbol" aria-hidden="true">👤</div>
+          <h3>Luisa Gómez</h3>
+        </article>
+
+        <article class="author-card">
+          <div class="author-symbol" aria-hidden="true">👤</div>
+          <h3>Shaireth Carvajal</h3>
+        </article>
+
+        <article class="author-card">
+          <div class="author-symbol" aria-hidden="true">👤</div>
+          <h3>Paul Goyes</h3>
+        </article>
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <h2>
+        <span class="section-symbol" aria-hidden="true">⌘</span>
+        Investigaciones desarrolladas
+      </h2>
+
+      <p>
+        El proyecto se estructuró en cuatro casos de estudio:
+      </p>
+
+      <div class="research-table-wrapper">
+        <table class="research-table">
+          <thead>
+            <tr>
+              <th>Investigación</th>
+              <th>Herramientas</th>
+              <th>Aplicación</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>
+                <span class="case-number">01</span>
+                <span class="case-name">Método de la poligonal geológica</span>
+              </td>
+              <td>
+                <span class="tool-tag">Python</span>
+  
+              </td>
+              <td>
+                Automatización del cálculo del espesor real
+                de capas estratigráficas.
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span class="case-number">02</span>
+                <span class="case-name">Clasificación de suelos</span>
+              </td>
+              <td>
+                <span class="tool-tag">Python</span>
+                <span class="tool-tag">Flutter</span>
+           
+              </td>
+              <td>
+                Desarrollo de una aplicación (APK) para automatizar
+                la clasificación de suelos según el sistema unificado
+                y la norma ASTM.
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span class="case-number">03</span>
+                <span class="case-name">Inversión de datos de sísmica de refracción</span>
+              </td>
+              <td>
+                <span class="tool-tag">Python</span>
+                <span class="tool-tag">pyGIMLi</span>
+              </td>
+              <td>
+                Inversión de datos para obtener tomografías
+                de velocidad del subsuelo somero mediante
+                herramientas de libre acceso.
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <span class="case-number">04</span>
+                <span class="case-name">Mapas de prospectividad mineral</span>
+              </td>
+              <td>
+                <span class="tool-tag">Aprendizaje automático</span>
+                <span class="tool-tag">Redes neuronales</span>
+              </td>
+              <td>
+                Elaboración de mapas de prospectividad mineral
+                mediante técnicas de aprendizaje automático.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <h2>
+        <span class="section-symbol" aria-hidden="true">▤</span>
+        Productos del proyecto
+      </h2>
+
+      <p>
+        Los códigos, datos y materiales de las investigaciones
+        se encuentran disponibles en el repositorio del proyecto.
+      </p>
+
+      <div class="products-grid">
+
+        <article class="product-card">
+          <div class="product-icon github-icon">
+  <svg viewBox="0 0 24 24" role="img" aria-label="GitHub"
+       xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor"
+      d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.56.1.76-.24.76-.54v-2.1c-3.1.67-3.76-1.32-3.76-1.32-.5-1.3-1.24-1.65-1.24-1.65-1.01-.69.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15 1 1.7 2.63 1.21 3.27.93.1-.72.39-1.21.71-1.49-2.48-.28-5.09-1.24-5.09-5.51 0-1.22.44-2.22 1.15-3-.12-.28-.5-1.42.11-2.96 0 0 .94-.3 3.05 1.14a10.6 10.6 0 0 1 5.55 0c2.11-1.44 3.05-1.14 3.05-1.14.61 1.54.23 2.68.11 2.96.72.78 1.15 1.78 1.15 3 0 4.28-2.61 5.22-5.1 5.5.4.35.76 1.03.76 2.08v3.09c0 .3.2.65.77.54A11.1 11.1 0 0 0 12 .9Z"/>
+  </svg>
+</div>
+
+          <h3>Códigos y datos</h3>
+
+          <p>
+            Repositorio con los archivos y recursos utilizados
+            en los cuatro casos de estudio.
+          </p>
+
+          <a class="product-link"
+            href="https://github.com/shairethomg/Herramientas-computacionales-para-las-geociencias"
+            target="_blank" rel="noopener noreferrer">
+            Explorar repositorio en GitHub ↗
+          </a>
+        </article>
+
+        <article class="product-card">
+          <div class="product-icon" aria-hidden="true">📄</div>
+
+          <h3>Póster científico</h3>
+
+          <p>
+            Trabajo presentado en la XXVI Semana Técnica de Geología,
+            Ingeniería Geológica y Geociencias.
+          </p>
+
+          <a class="product-link" href="#poster">
+            Ver póster ↓
+          </a>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="detail-section" id="poster">
+      <h2>
+        <span class="section-symbol" aria-hidden="true">▧</span>
+        Póster de presentación
+      </h2>
+
+      <div class="poster-frame">
+        <img
+          class="poster-image"
+          src="../assets/images/projects/poster-herramientas-computacionales.png"
+          alt="Póster Herramientas computacionales para las ciencias de la Tierra: uso de Python para resolver problemas geológicos, presentado en la XXVI Semana Técnica de Geología, Ingeniería Geológica y Geociencias."
+          loading="lazy">
+
+        <p class="poster-caption">
+          Póster presentado en la XXVI Semana Técnica de Geología,
+          Ingeniería Geológica y Geociencias · Código GF013 · 2024.
+        </p>
+      </div>
+    </section>
+
+    <footer class="detail-footer">
+      Shaireth Gizell Carvajal Sinuco · Geóloga
+    </footer>
+
+  </main>
+
+  <div class="gtranslate_wrapper" style="display:none;"></div>
+
+  <script>
+    window.gtranslateSettings = {
+      default_language: "es",
+      languages: ["es", "en"],
+      wrapper_selector: ".gtranslate_wrapper"
+    };
+  </script>
+
+  <script src="https://cdn.gtranslate.net/widgets/latest/dropdown.js" defer></script>
+  <script src="../assets/js/language.js"></script>
+  <script src="../assets/js/theme.js"></script>
+
+</body>
+</html>

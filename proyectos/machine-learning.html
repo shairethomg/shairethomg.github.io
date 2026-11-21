@@ -1,0 +1,871 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Proyecto de aprendizaje automático y procesamiento de lenguaje natural aplicado a la estimación de susceptibilidad por movimientos en masa.">
+  <title>Machine Learning aplicado a geoamenazas | Shaireth Carvajal</title>
+
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/themes.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --project-blue: #4A536D;
+      --project-sand: #D8C5A5;
+      --project-ochre: #B87943;
+      --project-terracotta: #A65F50;
+      --project-moss: #687C62;
+      --page-background: #F4F2ED;
+      --page-surface: #FFFFFF;
+      --page-text: #303746;
+      --page-muted: #697386;
+      --page-border: rgba(74, 83, 109, 0.16);
+    }
+
+    :root[data-theme="dark"] {
+      --page-background: #171B24;
+      --page-surface: #222936;
+      --page-text: #E9EAF0;
+      --page-muted: #AAB2C0;
+      --page-border: rgba(216, 197, 165, 0.18);
+    }
+
+    body {
+      background: var(--page-background);
+      color: var(--page-text);
+      font-family: "Inter", sans-serif;
+    }
+
+    .detail-page {
+      width: min(1080px, 90%);
+      margin: 0 auto;
+      padding: 28px 0 42px;
+    }
+
+    .detail-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 34px;
+    }
+
+    .detail-back {
+      color: var(--project-blue);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    :root[data-theme="dark"] .detail-back {
+      color: var(--project-sand);
+    }
+
+    .detail-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .detail-category {
+      color: var(--project-ochre);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .detail-title {
+      color: var(--page-text);
+      font-family: "Poppins", sans-serif;
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      line-height: 1.2;
+      margin: 0 0 12px;
+    }
+
+    .detail-meta {
+      color: var(--page-muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 22px;
+    }
+
+    .detail-intro {
+      max-width: 950px;
+      background: var(--page-surface);
+      border-left: 4px solid var(--project-ochre);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 0 0 28px !important;
+      line-height: 1.75;
+      color: var(--page-text);
+    }
+
+    .detail-page .detail-section {
+      margin: 25px 0 0 !important;
+      padding: 0 !important;
+      min-height: 0 !important;
+    }
+
+    .detail-section h2 {
+      font-family: "Poppins", sans-serif;
+      color: var(--page-text);
+      font-size: 1.35rem;
+      margin: 0 0 10px !important;
+      padding: 0 !important;
+    }
+
+    .detail-section > p {
+      color: var(--page-muted);
+      line-height: 1.7;
+      margin: 0 0 15px !important;
+      padding: 0 !important;
+    }
+
+    .section-symbol {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: rgba(184, 121, 67, 0.13);
+      color: var(--project-ochre);
+      margin-right: 9px;
+      font-size: 1.05rem;
+      vertical-align: middle;
+    }
+
+    /* Variables de entrada */
+
+    .variable-groups {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 16px;
+    }
+
+    .variable-card {
+      background: var(--page-surface);
+      border: 1px solid var(--page-border);
+      border-radius: 11px;
+      padding: 18px;
+    }
+
+    .variable-card h3 {
+      font-family: "Poppins", sans-serif;
+      font-size: 0.98rem;
+      color: var(--page-text);
+      margin: 0 0 5px;
+    }
+
+    .variable-card > p {
+      color: var(--page-muted);
+      font-size: 0.8rem;
+      margin: 0 0 13px !important;
+      line-height: 1.5;
+    }
+
+    .variable-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .variable-tag {
+      display: inline-block;
+      padding: 6px 9px;
+      border-radius: 6px;
+      background: rgba(74, 83, 109, 0.09);
+      color: var(--page-text);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.75rem;
+    }
+
+    .variable-card.categorical {
+      border-top: 3px solid var(--project-blue);
+    }
+
+    .variable-card.continuous {
+      border-top: 3px solid var(--project-moss);
+    }
+
+    .variable-table-wrap {
+      overflow-x: auto;
+      margin-top: 16px;
+      border: 1px solid var(--page-border);
+      border-radius: 10px;
+      background: var(--page-surface);
+    }
+
+    .variable-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 570px;
+      font-size: 0.82rem;
+    }
+
+    .variable-table th,
+    .variable-table td {
+      padding: 10px 13px;
+      text-align: left;
+      border-bottom: 1px solid var(--page-border);
+    }
+
+    .variable-table th {
+      background: rgba(74, 83, 109, 0.08);
+      color: var(--page-text);
+      font-weight: 700;
+    }
+
+    .variable-table td {
+      color: var(--page-muted);
+      line-height: 1.45;
+    }
+
+    .variable-table td:first-child {
+      font-family: "JetBrains Mono", monospace;
+      color: var(--page-text);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .variable-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Arquitectura */
+
+    .architecture {
+      background: var(--page-surface);
+      border: 1px solid var(--page-border);
+      border-radius: 12px;
+      padding: 22px;
+      margin-top: 16px;
+    }
+
+    .architecture-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .architecture-branch {
+      border: 1px solid var(--page-border);
+      border-radius: 9px;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .architecture-branch.categorical {
+      border-top: 3px solid var(--project-blue);
+    }
+
+    .architecture-branch.continuous {
+      border-top: 3px solid var(--project-moss);
+    }
+
+    .architecture-branch h3 {
+      font-family: "Poppins", sans-serif;
+      font-size: 0.9rem;
+      color: var(--page-text);
+      margin: 0 0 7px;
+    }
+
+    .architecture-branch p {
+      color: var(--page-muted);
+      font-size: 0.78rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .architecture-arrow {
+      color: var(--page-muted);
+      text-align: center;
+      font-size: 1.5rem;
+      line-height: 1.7;
+    }
+
+    .architecture-block {
+      max-width: 600px;
+      margin: 0 auto;
+      border-radius: 9px;
+      padding: 15px;
+      text-align: center;
+      background: rgba(184, 121, 67, 0.11);
+      border: 1px solid rgba(184, 121, 67, 0.25);
+    }
+
+    .architecture-block.neural {
+      background: rgba(104, 124, 98, 0.11);
+      border-color: rgba(104, 124, 98, 0.3);
+    }
+
+    .architecture-block h3 {
+      color: var(--page-text);
+      font-family: "Poppins", sans-serif;
+      font-size: 0.92rem;
+      margin: 0 0 5px;
+    }
+
+    .architecture-block p {
+      color: var(--page-muted);
+      font-size: 0.79rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .architecture-caption {
+      color: var(--page-muted);
+      font-size: 0.75rem;
+      line-height: 1.5;
+      text-align: center;
+      margin: 14px 0 0;
+    }
+
+    /* Resultados */
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .metric-card {
+      background: var(--page-surface);
+      border: 1px solid var(--page-border);
+      border-radius: 10px;
+      padding: 17px 12px;
+      text-align: center;
+    }
+
+    .metric-value {
+      display: block;
+      color: var(--project-moss);
+      font-family: "Poppins", sans-serif;
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .metric-label {
+      display: block;
+      color: var(--page-muted);
+      font-size: 0.77rem;
+      margin-top: 5px;
+    }
+
+    .embedding-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .embedding-stat {
+      background: rgba(74, 83, 109, 0.07);
+      border-radius: 8px;
+      padding: 12px 8px;
+      text-align: center;
+    }
+
+    .embedding-stat strong {
+      display: block;
+      color: var(--page-text);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.9rem;
+    }
+
+    .embedding-stat span {
+      display: block;
+      color: var(--page-muted);
+      font-size: 0.72rem;
+      margin-top: 4px;
+    }
+
+    /* Recursos */
+
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .resource-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--page-surface);
+      border: 1px solid var(--page-border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .resource-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 11px;
+      background: rgba(74, 83, 109, 0.12);
+      color: var(--project-blue);
+      font-size: 1.4rem;
+      margin-bottom: 13px;
+    }
+
+    :root[data-theme="dark"] .resource-icon {
+      color: var(--project-sand);
+    }
+
+    .resource-card h3 {
+      color: var(--page-text);
+      font-family: "Poppins", sans-serif;
+      font-size: 1rem;
+      margin: 0 0 8px;
+    }
+
+    .resource-card p {
+      color: var(--page-muted);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin: 0 0 16px;
+      flex: 1;
+    }
+
+    .resource-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--project-terracotta);
+      text-decoration: none;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .resource-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Afiche */
+
+    .poster-container {
+      max-width: 650px;
+      margin: 18px auto 0;
+      background: var(--page-surface);
+      border: 1px solid var(--page-border);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .poster-container img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+    }
+
+    .poster-caption {
+      color: var(--page-muted);
+      font-size: 0.8rem;
+      text-align: center;
+      line-height: 1.5;
+      margin: 12px 0 2px;
+    }
+
+    .detail-note {
+      background: rgba(104, 124, 98, 0.10);
+      border-left: 3px solid var(--project-moss);
+      border-radius: 7px;
+      padding: 14px 17px;
+      color: var(--page-muted);
+      font-size: 0.84rem;
+      line-height: 1.65;
+      margin-top: 18px;
+    }
+
+    /* Pie de página estándar */
+
+    .detail-footer {
+      border-top: 1px solid rgba(74, 83, 109, 0.20);
+      margin-top: 36px;
+      padding-top: 18px;
+      color: var(--page-muted);
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    @media (max-width: 750px) {
+      .metrics-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .resources-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .variable-groups,
+      .architecture-inputs {
+        grid-template-columns: 1fr;
+      }
+
+      .embedding-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .architecture {
+        padding: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .detail-page {
+        width: 92%;
+        padding-top: 20px;
+      }
+
+      .detail-topbar {
+        align-items: flex-start;
+        margin-bottom: 26px;
+      }
+
+      .detail-back {
+        font-size: 0.82rem;
+      }
+
+      .detail-intro {
+        padding: 17px;
+      }
+
+      .variable-card {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="detail-page">
+
+    <div class="detail-topbar">
+      <a class="detail-back" href="../index.html#proyectos">← Volver a proyectos</a>
+
+      <div class="detail-controls">
+        <button id="language-toggle" class="language-toggle notranslate"
+          type="button" aria-label="Cambiar idioma" translate="no">EN</button>
+
+        <button id="theme-toggle" class="theme-toggle"
+          type="button" aria-label="Cambiar tema" aria-pressed="false">
+          <span class="theme-icon">☾</span>
+        </button>
+      </div>
+    </div>
+
+    <header>
+      <div class="detail-category">
+        Aprendizaje automático · Geoamenazas 
+      </div>
+
+      <h1 class="detail-title">
+        Machine Learning aplicado a geoamenazas
+      </h1>
+
+      <div class="detail-meta">
+        Investigación aplicada · SIGAC · UIS
+    </header>
+
+    <p class="detail-intro">
+      Este proyecto exploró la estimación de la susceptibilidad por
+      movimientos en masa mediante técnicas de aprendizaje automático
+      y procesamiento de lenguaje natural. Se integraron variables
+      geológicas, geomorfológicas y topográficas del área de estudio
+      en Popayán, combinando información categórica y continua para
+      experimentar con una arquitectura de red neuronal.
+    </p>
+
+    <!-- VARIABLES DE ENTRADA -->
+
+    <section class="detail-section">
+      <h2>
+        <span class="section-symbol" aria-hidden="true">▦</span>
+        Variables de entrada
+      </h2>
+
+      <p>
+        Se trabajó con 11 factores condicionantes representados en
+        capas ráster, organizados en dos grupos según su naturaleza. Se trabajo con un conjunto de datos de entrenamiento y prueba de 200 datos suministrados por el Servicio Geológico Colombiano.
+      </p>
+
+      <div class="variable-groups">
+
+        <article class="variable-card categorical">
+          <h3>Variables categóricas</h3>
+          <p>Representan unidades y clases temáticas del territorio.</p>
+
+          <div class="variable-tags">
+            <span class="variable-tag">X1 · Geología</span>
+            <span class="variable-tag">X2 · Cobertura del suelo</span>
+            <span class="variable-tag">X3 · Geomorfología</span>
+          </div>
+        </article>
+
+        <article class="variable-card continuous">
+          <h3>Variables continuas</h3>
+          <p>Describen propiedades topográficas e hidrológicas.</p>
+
+          <div class="variable-tags">
+            <span class="variable-tag">X4 · Acumulación de flujo</span>
+            <span class="variable-tag">X5 · Longitud de flujo</span>
+            <span class="variable-tag">X6 · Curvatura general</span>
+            <span class="variable-tag">X7 · Curvatura planimétrica</span>
+            <span class="variable-tag">X8 · Curvatura de perfil</span>
+            <span class="variable-tag">X9 · Pendiente</span>
+            <span class="variable-tag">X10 · Rugosidad</span>
+            <span class="variable-tag">X11 · Índice topográfico de humedad</span>
+          </div>
+        </article>
+
+      </div>
+
+    </section>
+
+    <!-- ARQUITECTURA -->
+
+    <section class="detail-section">
+      <h2>
+        <span class="section-symbol" aria-hidden="true">🧠</span>
+        Arquitectura computacional
+      </h2>
+
+      <p>
+        La arquitectura integró las variables categóricas mediante
+        una capa de embeddings y las variables continuas como entradas
+        numéricas. Posteriormente, ambas representaciones se
+        aplanaron y concatenaron para alimentar la red neuronal.
+      </p>
+
+      <div class="architecture">
+
+        <div class="architecture-inputs">
+
+          <div class="architecture-branch categorical">
+            <h3>Variables categóricas</h3>
+            <p>X1 · X2 · X3</p>
+            <p>Representación mediante embeddings</p>
+          </div>
+
+          <div class="architecture-branch continuous">
+            <h3>Variables continuas</h3>
+            <p>X4 · X5 · X6 · X7</p>
+            <p>X8 · X9 · X10 · X11</p>
+            <p>Datos numéricos</p>
+          </div>
+
+        </div>
+
+        <div class="architecture-arrow">↓</div>
+
+        <div class="architecture-block">
+          <h3>Integración de representaciones</h3>
+          <p>Flatten · Concatenación</p>
+        </div>
+
+        <div class="architecture-arrow">↓</div>
+
+        <div class="architecture-block neural">
+          <h3>Red neuronal densamente conectada</h3>
+          <p>Tres capas ocultas · Clasificación binaria</p>
+        </div>
+
+        <div class="architecture-arrow">↓</div>
+
+        <div class="architecture-block">
+          <h3>Salida del modelo</h3>
+          <p>Estimación de la clase de susceptibilidad</p>
+        </div>
+
+        <p class="architecture-caption">
+          Esquema conceptual de la arquitectura.
+          No representa el número de neuronas ni las dimensiones internas
+          de cada capa.
+        </p>
+
+      </div>
+    </section>
+
+    <!-- RESULTADOS -->
+
+    <section class="detail-section">
+      <h2>
+        <span class="section-symbol" aria-hidden="true">▥</span>
+        Resultados experimentales
+      </h2>
+
+      <p>
+       
+      </p>
+
+      <div class="metrics-grid">
+
+        <div class="metric-card">
+          <span class="metric-value">97,50 %</span>
+          <span class="metric-label">Accuracy</span>
+        </div>
+
+        <div class="metric-card">
+          <span class="metric-value">100 %</span>
+          <span class="metric-label">Recall</span>
+        </div>
+
+        <div class="metric-card">
+          <span class="metric-value">96,15 %</span>
+          <span class="metric-label">Precision</span>
+        </div>
+
+        <div class="metric-card">
+          <span class="metric-value">0,4154</span>
+          <span class="metric-label">Test loss</span>
+        </div>
+
+      </div>
+
+      <h3 style="font-family:'Poppins',sans-serif; font-size:1rem; margin:22px 0 8px;">
+        Análisis de la capa de embeddings
+      </h3>
+
+      <p>
+        Se exploró la distribución de las representaciones aprendidas
+        mediante estadísticas descriptivas y visualizaciones en
+        TensorBoard, incluyendo una proyección bidimensional con t-SNE
+        y una visualización tridimensional.
+      </p>
+
+      <div class="embedding-stats">
+
+        <div class="embedding-stat">
+          <strong>-0,0014</strong>
+          <span>Media</span>
+        </div>
+
+        <div class="embedding-stat">
+          <strong>0,1013</strong>
+          <span>Desviación estándar</span>
+        </div>
+
+        <div class="embedding-stat">
+          <strong>-0,4291</strong>
+          <span>Valor mínimo</span>
+        </div>
+
+        <div class="embedding-stat">
+          <strong>0,3407</strong>
+          <span>Valor máximo</span>
+        </div>
+
+      </div>
+
+      <div class="detail-note">
+        Las métricas deben interpretarse como resultados experimentales del conjunto
+        de prueba. No constituyen una validación independiente ni
+        demuestran por sí solas la confiabilidad de un mapa de
+        susceptibilidad.
+      </div>
+    </section>
+
+    <!-- FORMACIÓN -->
+
+    <section class="detail-section">
+      <h2>
+        <span class="section-symbol" aria-hidden="true">🎓</span>
+        Formación y divulgación
+      </h2>
+
+      <p>
+        Como parte de esta experiencia, impartí el taller
+        <strong>«Introducción a redes neuronales densamente conectadas»</strong>
+        en la Escuela de Geología de la Universidad Industrial de Santander.
+        La actividad incluyó un ejercicio práctico de implementación
+        de una red neuronal.
+      </p>
+
+      <div class="poster-container">
+        <img
+          src="../assets/images/projects/taller-redes-neuronales.png"
+          alt="Afiche del taller Introducción a redes neuronales densamente conectadas, realizado en la Escuela de Geología de la UIS."
+          loading="lazy">
+
+        <p class="poster-caption">
+          Afiche del taller · Escuela de Geología, UIS · 2024
+        </p>
+      </div>
+    </section>
+
+    <!-- PRODUCTOS -->
+
+    <section class="detail-section">
+      <h2>
+        <span class="section-symbol" aria-hidden="true">▤</span>
+        Productos y recursos
+      </h2>
+
+      <p>
+        Material práctico utilizado en el taller y recursos
+        relacionados con el desarrollo computacional.
+      </p>
+
+      <div class="resources-grid">
+
+        <article class="resource-card">
+          <div class="resource-icon" aria-hidden="true">📓</div>
+
+          <h3>Ejercicio práctico: Dense Neural Network</h3>
+
+          <p>
+            Notebook de introducción a redes neuronales densamente
+            conectadas, con un ejercicio de clasificación binaria
+            mediante datos sintéticos.
+          </p>
+
+          <a class="resource-link"
+  href="../assets/documents/Dense%20neuronal%20network.ipynb"
+  download="Dense_Neural_Network.ipynb">
+  Descargar notebook ↓
+</a>
+
+    </section>
+
+    <footer class="detail-footer">
+      Shaireth Gizell Carvajal Sinuco · Geóloga
+    </footer>
+
+  </main>
+
+  <div class="gtranslate_wrapper" style="display:none;"></div>
+
+  <script>
+    window.gtranslateSettings = {
+      default_language: "es",
+      languages: ["es", "en"],
+      wrapper_selector: ".gtranslate_wrapper"
+    };
+  </script>
+
+  <script src="https://cdn.gtranslate.net/widgets/latest/dropdown.js" defer></script>
+  <script src="../assets/js/language.js"></script>
+  <script src="../assets/js/theme.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,482 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Clasificación de imágenes sísmicas | Shaireth Carvajal</title>
+
+    <meta name="description" content="Clasificación y organización de imágenes sísmicas para la construcción de un conjunto de datos destinado al entrenamiento de redes neuronales.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/themes.css">
+
+    <style>
+        :root {
+            --project-blue: #4A536D;
+            --project-sand: #D8C5A5;
+            --project-ochre: #B87943;
+            --project-terracotta: #A65F50;
+            --project-moss: #687C62;
+            --project-bg: #F4F2ED;
+            --project-surface: #FFFFFF;
+            --project-text: #202638;
+            --project-muted: #667085;
+            --project-border: #E3DED5;
+        }
+
+        body {
+            margin: 0;
+            background: var(--project-bg);
+            color: var(--project-text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+        }
+
+        .detail-page {
+            width: min(1080px, 90%);
+            margin: 0 auto;
+            padding: 28px 0 40px;
+        }
+
+        .detail-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 42px;
+            color: var(--project-blue);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .detail-back:hover {
+            color: var(--project-ochre);
+        }
+
+        .detail-category {
+            margin-bottom: 7px;
+            color: var(--project-ochre);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .detail-title {
+            max-width: 850px;
+            margin: 0 0 14px;
+            color: var(--project-text);
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.1rem);
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .detail-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 25px;
+            margin-bottom: 20px;
+            color: var(--project-muted);
+            font-size: 0.9rem;
+        }
+
+        .detail-meta strong {
+            color: var(--project-blue);
+            font-weight: 600;
+        }
+
+        .detail-intro {
+    max-width: 850px;
+    margin: 0 0 18px !important;
+    padding: 18px 24px;
+    border-left: 3px solid var(--project-ochre);
+    border-radius: 0 10px 10px 0;
+    background: var(--project-surface);
+}
+        .detail-intro p {
+            margin: 0;
+            color: var(--project-muted);
+            font-size: 1.04rem;
+        }
+
+        .detail-page .detail-section {
+    margin: 18px 0 0 !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+}
+
+        .detail-section h2 {
+            margin: 0 0 9px;
+            color: var(--project-text);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.55rem;
+            font-weight: 600;
+        }
+
+        .detail-section > p {
+            max-width: 850px;
+            color: var(--project-muted);
+        }
+
+        .classification-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .class-card {
+            min-width: 0;
+            overflow: hidden;
+            border: 1px solid var(--project-border);
+            border-radius: 12px;
+            background: var(--project-surface);
+        }
+
+        .class-illustration {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 115px;
+            padding: 12px;
+            background: #202638;
+        }
+
+        .class-illustration svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .class-card h3 {
+            margin: 0;
+            padding: 13px 10px 15px;
+            color: var(--project-blue);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .illustration-note {
+            margin-top: 8px;
+            color: var(--project-muted);
+            font-size: 0.78rem;
+            font-style: italic;
+        }
+
+        .detail-note {
+            margin-top: 38px;
+            padding-top: 20px;
+            border-top: 1px solid var(--project-border);
+            color: var(--project-muted);
+            font-size: 0.88rem;
+        }
+
+ .detail-footer {
+  border-top: 1px solid rgba(74, 83, 109, 0.20);
+  margin-top: 36px;
+  padding-top: 18px;
+  color: var(--page-muted);
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+        .detail-footer a {
+            color: var(--project-ochre);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .detail-footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 850px) {
+            .classification-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 560px) {
+            .detail-page {
+                width: min(100% - 32px, 1080px);
+                padding-top: 25px;
+            }
+
+            .detail-back {
+                margin-bottom: 30px;
+            }
+
+            .detail-intro {
+                padding: 20px;
+            }
+
+            .classification-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .class-illustration {
+                height: 100px;
+            }
+
+            .class-card h3 {
+                font-size: 0.82rem;
+            }
+        }
+
+        :root[data-theme="dark"] {
+    --project-bg: #171B24;
+    --project-surface: #222938;
+    --project-text: #F0F1F4;
+    --project-muted: #B2BAC8;
+    --project-border: #394253;
+}
+
+        .detail-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.detail-topbar .detail-back {
+    margin-bottom: 0;
+}
+
+.detail-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.detail-controls button {
+    min-width: 38px;
+    height: 38px;
+    padding: 0 10px;
+    border: 1px solid var(--project-border);
+    border-radius: 8px;
+    background: var(--project-surface);
+    color: var(--project-blue);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.detail-controls button:hover {
+    border-color: var(--project-ochre);
+    color: var(--project-ochre);
+}
+
+@media (max-width: 560px) {
+    .detail-topbar {
+        margin-bottom: 30px;
+    }
+}
+
+    </style>
+</head>
+
+<body>
+
+    <main class="detail-page">
+
+    <div class="detail-topbar">
+        <a class="detail-back" href="../index.html#proyectos">
+            ← Volver a proyectos
+        </a>
+
+        <div class="detail-controls">
+            <button id="language-toggle"
+                    class="language-toggle"
+                    type="button"
+                    aria-label="Cambiar idioma"
+                    translate="no">
+                EN
+            </button>
+
+            <button id="theme-toggle"
+                    class="theme-toggle"
+                    type="button"
+                    aria-label="Cambiar tema"
+                    aria-pressed="false">
+                <span class="theme-icon">☾</span>
+            </button>
+        </div>
+    </div>
+
+        <header>
+            <div class="detail-category">Datasets · Aprendizaje profundo</div>
+
+            <h1 class="detail-title">
+                Clasificación de imágenes sísmicas para entrenar redes neuronales
+            </h1>
+
+            <div class="detail-meta">
+                <span><strong>Periodo:</strong> Octubre de 2024</span>
+                <span><strong>Grupo:</strong> Grupo de investigación HDSP · UIS</span>
+            </div>
+        </header>
+
+        <section class="detail-intro">
+            <p>
+                El entrenamiento de redes neuronales con imágenes sísmicas
+                requiere conjuntos de datos organizados y etiquetados de
+                manera consistente. En este proyecto apoyé el desarrollo
+                de un conjunto de imágenes clasificadas según su
+                complejidad estructural, como parte del trabajo de
+                investigación de una estudiante de maestría en geofísica.
+            </p>
+        </section>
+
+        <section class="detail-section">
+            <h2>Trabajo realizado</h2>
+
+            <p>
+                Se clasificaron y organizaron aproximadamente 4.000 imágenes
+                sísmicas sinteticas en cinco categorías, de acuerdo con las características
+                estructurales observadas. Cada categoría se almacenó en una
+                carpeta independiente para facilitar la organización del
+                conjunto de datos.
+            </p>
+        </section>
+
+        <section class="detail-section">
+            <h2>Clases de clasificación</h2>
+
+            <p>
+                Las imágenes se distribuyeron en cinco categorías de
+                complejidad estructural:
+            </p>
+
+            <div class="classification-grid">
+
+                <!-- Clase 1: Plano -->
+                <article class="class-card">
+                    <div class="class-illustration">
+                        <svg viewBox="0 0 180 100" role="img" aria-label="Esquema ilustrativo de reflectores planos">
+                            <g stroke="#D8C5A5" stroke-width="2" fill="none">
+                                <path d="M5 20 L175 20"/>
+                                <path d="M5 35 L175 35"/>
+                                <path d="M5 50 L175 50"/>
+                                <path d="M5 65 L175 65"/>
+                                <path d="M5 80 L175 80"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <h3>Plano</h3>
+                </article>
+
+                <!-- Clase 2: Inclinado -->
+                <article class="class-card">
+                    <div class="class-illustration">
+                        <svg viewBox="0 0 180 100" role="img" aria-label="Esquema ilustrativo de reflectores inclinados">
+                            <g stroke="#D8C5A5" stroke-width="2" fill="none">
+                                <path d="M5 10 L175 48"/>
+                                <path d="M5 28 L175 66"/>
+                                <path d="M5 46 L175 84"/>
+                                <path d="M5 64 L145 95"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <h3>Inclinado</h3>
+                </article>
+
+                <!-- Clase 3: Pliegues -->
+                <article class="class-card">
+                    <div class="class-illustration">
+                        <svg viewBox="0 0 180 100" role="img" aria-label="Esquema ilustrativo de reflectores plegados">
+                            <g stroke="#D8C5A5" stroke-width="2" fill="none">
+                                <path d="M5 22 Q45 5 90 22 T175 22"/>
+                                <path d="M5 38 Q45 21 90 38 T175 38"/>
+                                <path d="M5 54 Q45 37 90 54 T175 54"/>
+                                <path d="M5 70 Q45 53 90 70 T175 70"/>
+                                <path d="M5 86 Q45 69 90 86 T175 86"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <h3>Con pliegues</h3>
+                </article>
+
+                <!-- Clase 4: Sin señal -->
+                <article class="class-card">
+                    <div class="class-illustration">
+                        <svg viewBox="0 0 180 100" role="img" aria-label="Esquema ilustrativo de una sección sin señal definida">
+                            <g stroke="#D8C5A5" stroke-width="1.6" fill="none" opacity="0.65">
+                                <path d="M5 20 L175 20"/>
+                                <path d="M5 40 L175 40"/>
+                                <path d="M5 60 L175 60"/>
+                                <path d="M5 80 L175 80"/>
+                            </g>
+                            <path d="M5 50 L175 50" stroke="#A65F50" stroke-width="2" stroke-dasharray="5 6"/>
+                        </svg>
+                    </div>
+                    <h3>Sin señal</h3>
+                </article>
+
+                <!-- Clase 5: Fallas -->
+                <article class="class-card">
+                    <div class="class-illustration">
+                        <svg viewBox="0 0 180 100" role="img" aria-label="Esquema ilustrativo de reflectores desplazados por una falla">
+                            <g stroke="#D8C5A5" stroke-width="2" fill="none">
+                                <path d="M5 20 L75 20 L105 35 L175 35"/>
+                                <path d="M5 38 L75 38 L105 53 L175 53"/>
+                                <path d="M5 56 L75 56 L105 71 L175 71"/>
+                                <path d="M5 74 L75 74 L105 89 L175 89"/>
+                            </g>
+                            <path d="M75 5 L105 95" stroke="#A65F50" stroke-width="2.5" stroke-dasharray="5 4"/>
+                        </svg>
+                    </div>
+                    <h3>Con fallas</h3>
+                </article>
+
+            </div>
+
+            <p class="illustration-note">
+                Esquemas ilustrativos de las categorías.
+            </p>
+        </section>
+
+
+        <footer class="detail-footer">
+            Shaireth Gizell Carvajal Sinuco · Geóloga
+</footer>
+
+    </main>
+
+    <!-- Contenedor de Google Translate -->
+<div class="gtranslate_wrapper" style="display:none;"></div>
+
+<!-- Configuración de idiomas -->
+<script>
+    window.gtranslateSettings = {
+        default_language: "es",
+        languages: ["es", "en"],
+        wrapper_selector: ".gtranslate_wrapper"
+    };
+</script>
+
+<!-- Motor de traducción -->
+<script src="https://cdn.gtranslate.net/widgets/latest/dropdown.js"
+        defer>
+</script>
+
+<!-- Preferencias compartidas -->
+<script src="../assets/js/language.js"></script>
+<script src="../assets/js/theme.js"></script>
+
+</body>
+</html>

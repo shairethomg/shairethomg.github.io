@@ -1,0 +1,1222 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Modelamiento geológico 3D con GemPy | Shaireth Carvajal</title>
+  <meta name="description" content="Modelamiento geológico tridimensional de la cuenca Sinú-San Jacinto mediante GemPy, a partir de información sísmica y cartográfica, con modelos de velocidades.">
+  <meta name="author" content="Shaireth Gizell Carvajal Sinuco">
+
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/themes.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --project-blue: #4A536D;
+      --project-sand: #D8C5A5;
+      --project-ochre: #B87943;
+      --project-terracotta: #A65F50;
+      --project-moss: #687C62;
+      --page-background: #F4F2ED;
+      --page-surface: #FFFFFF;
+      --page-text: #303746;
+      --page-muted: #697386;
+      --page-border: rgba(74, 83, 109, 0.16);
+    }
+
+    :root[data-theme="dark"] {
+      --page-background: #171B24;
+      --page-surface: #222936;
+      --page-text: #E9EAF0;
+      --page-muted: #AAB2C0;
+      --page-border: rgba(216, 197, 165, 0.18);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--page-background);
+      color: var(--page-text);
+      font-family: "Inter", sans-serif;
+    }
+
+    .detail-page {
+      width: min(1080px, 90%);
+      margin: 0 auto;
+      padding: 28px 0 42px;
+    }
+
+    .detail-container { width: 100%; margin: 0 auto; }
+
+    .detail-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 34px;
+    }
+
+    .detail-back {
+      color: var(--project-blue);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: .92rem;
+      transition: color .2s ease;
+    }
+    .detail-back:hover { color: var(--project-terracotta); }
+    :root[data-theme="dark"] .detail-back { color: var(--project-sand); }
+
+    .detail-controls { display: flex; align-items: center; gap: 10px; }
+
+    .detail-category {
+      display: inline-block;
+      color: var(--project-ochre);
+      font-family: "JetBrains Mono", monospace;
+      font-size: .78rem;
+      font-weight: 500;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .detail-title {
+      color: var(--page-text);
+      font-family: "Poppins", sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      line-height: 1.2;
+      margin: 0 0 16px;
+    }
+
+    .detail-intro, .gempy-intro {
+      max-width: 900px;
+      line-height: 1.75;
+      color: var(--page-text);
+    }
+
+    .detail-intro {
+      background: var(--page-surface);
+      border-left: 4px solid var(--project-ochre);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 0 0 30px !important;
+    }
+
+    .detail-section {
+      margin: 30px 0 0 !important;
+      padding: 0 !important;
+      min-height: 0 !important;
+    }
+
+    .detail-section h2 {
+      color: var(--page-text);
+      font-family: "Poppins", sans-serif;
+      font-size: 1.4rem;
+      line-height: 1.35;
+      margin: 0 0 12px !important;
+      padding: 0 !important;
+    }
+
+    .detail-section > p {
+      color: var(--page-muted);
+      line-height: 1.7;
+      margin: 0 0 16px !important;
+      padding: 0 !important;
+    }
+
+    .gempy-highlights {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin: 26px 0 36px;
+    }
+
+    .gempy-highlight, .gempy-method-step {
+      background: var(--page-surface);
+      border: 1px solid var(--page-border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .gempy-highlight strong {
+      display: block;
+      color: var(--project-blue);
+      font-family: "Poppins", sans-serif;
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+    }
+    :root[data-theme="dark"] .gempy-highlight strong { color: var(--project-sand); }
+    .gempy-highlight span { color: var(--page-muted); font-size: .88rem; line-height: 1.5; }
+
+    .gempy-methodology {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .gempy-method-step .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: rgba(184,121,67,.14);
+      color: var(--project-ochre);
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 600;
+      margin-bottom: 13px;
+    }
+    .gempy-method-step h3 {
+      color: var(--page-text);
+      font-family: "Poppins", sans-serif;
+      font-size: .98rem;
+      line-height: 1.4;
+      margin: 0 0 8px;
+    }
+    .gempy-method-step p {
+      color: var(--page-muted);
+      font-size: .86rem;
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    .model-selector {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 24px 0;
+    }
+    .model-select-button {
+      text-align: left;
+      padding: 19px;
+      border: 1px solid var(--page-border);
+      border-radius: 12px;
+      background: var(--page-surface);
+      color: var(--page-text);
+      cursor: pointer;
+      font: inherit;
+      transition: border-color .2s ease, background .2s ease, transform .2s ease;
+    }
+    .model-select-button:hover { transform: translateY(-2px); border-color: var(--project-ochre); }
+    .model-select-button.active {
+      border: 2px solid var(--project-ochre);
+      background: rgba(184,121,67,.08);
+    }
+    .model-select-number {
+      display: block;
+      color: var(--project-ochre);
+      font-family: "JetBrains Mono", monospace;
+      font-size: .76rem;
+      letter-spacing: .04em;
+      margin-bottom: 9px;
+    }
+    .model-select-button strong {
+      display: block;
+      color: var(--page-text);
+      font-family: "Poppins", sans-serif;
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+    .model-select-button small {
+      display: block;
+      color: var(--page-muted);
+      font-size: .82rem;
+      line-height: 1.55;
+    }
+
+    .model-explorer {
+      border: 1px solid var(--page-border);
+      border-radius: 14px;
+      padding: 24px;
+      background: var(--page-surface);
+      margin-top: 20px;
+    }
+    .model-content { display: none; }
+    .model-content.active { display: block; }
+    .model-heading { margin-bottom: 20px; }
+    .model-heading h3 {
+      color: var(--page-text);
+      font-family: "Poppins", sans-serif;
+      font-size: 1.25rem;
+      margin: 0 0 8px;
+    }
+    .model-heading p {
+      color: var(--page-muted);
+      line-height: 1.65;
+      margin: 0;
+      font-size: .92rem;
+    }
+
+    .model-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-bottom: 1px solid var(--page-border);
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+    }
+    .model-tab {
+      border: 1px solid var(--page-border);
+      border-radius: 7px;
+      padding: 10px 13px;
+      background: transparent;
+      color: var(--page-muted);
+      cursor: pointer;
+      font-family: "Inter", sans-serif;
+      font-size: .82rem;
+      transition: all .2s ease;
+    }
+    .model-tab:hover { border-color: var(--project-ochre); color: var(--page-text); }
+    .model-tab.active {
+      background: var(--project-blue);
+      border-color: var(--project-blue);
+      color: #fff;
+    }
+    .model-view { display: none; }
+    .model-view.active { display: block; }
+
+    .model-image-frame {
+      position: relative;
+      min-height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #ECEBE7;
+      border: 1px solid var(--page-border);
+    }
+    .model-image-frame img {
+      display: block;
+      width: 100%;
+      max-height: 680px;
+      object-fit: contain;
+      cursor: zoom-in;
+    }
+    .model-image-placeholder {
+      width: 100%;
+      min-height: 280px;
+      padding: 35px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #656565;
+      gap: 10px;
+    }
+    .model-image-placeholder .placeholder-icon { font-size: 2rem; opacity: .65; }
+    .model-image-placeholder strong { font-family: "Poppins", sans-serif; font-size: .95rem; }
+    .model-image-placeholder span { font-size: .8rem; max-width: 450px; line-height: 1.6; }
+    .model-view-caption {
+      margin: 12px 0 0;
+      color: var(--page-muted);
+      font-size: .82rem;
+      line-height: 1.6;
+    }
+
+    .model-resources {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 18px;
+      border-top: 1px solid var(--page-border);
+      margin-top: 24px;
+      padding-top: 20px;
+    }
+    .model-resource-info { display: flex; align-items: center; gap: 13px; }
+    .model-resource-icon {
+      width: 43px;
+      height: 43px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: rgba(104,124,98,.14);
+      color: var(--project-moss);
+      font-size: 1.3rem;
+    }
+    .model-resource-info strong {
+      display: block;
+      color: var(--page-text);
+      font-family: "Poppins", sans-serif;
+      font-size: .92rem;
+    }
+    .model-resource-info small { display: block; color: var(--page-muted); font-size: .8rem; margin-top: 3px; }
+    .model-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border-radius: 7px;
+      background: var(--project-blue);
+      color: #fff !important;
+      text-decoration: none;
+      font-size: .85rem;
+      font-weight: 600;
+      transition: background .2s ease;
+    }
+    .model-download:hover { background: var(--project-terracotta); }
+    .model-download.disabled { opacity: .45; pointer-events: none; }
+
+    .gempy-note {
+      margin-top: 20px;
+      padding: 15px 18px;
+      border-left: 3px solid var(--project-ochre);
+      background: rgba(184,121,67,.08);
+      border-radius: 0 8px 8px 0;
+      color: var(--page-muted);
+      font-size: .85rem;
+      line-height: 1.65;
+    }
+    .gempy-tools { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .gempy-tool {
+      border: 1px solid var(--page-border);
+      border-radius: 30px;
+      padding: 8px 14px;
+      color: var(--page-muted);
+      font-size: .83rem;
+      background: var(--page-surface);
+    }
+
+    .detail-footer {
+      border-top: 1px solid var(--page-border);
+      margin-top: 36px;
+      padding-top: 18px;
+      color: var(--page-muted);
+      font-size: .82rem;
+      text-align: center;
+    }
+
+    .image-lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0,0,0,.92);
+      align-items: center;
+      justify-content: center;
+      padding: 35px;
+    }
+    .image-lightbox.active { display: flex; }
+    .image-lightbox img { max-width: 95%; max-height: 90vh; object-fit: contain; }
+    .lightbox-close {
+      position: absolute;
+      top: 18px;
+      right: 25px;
+      color: #fff;
+      background: transparent;
+      border: 0;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 760px) {
+      .detail-page { width: 92%; padding-top: 20px; }
+      .detail-topbar { margin-bottom: 26px; }
+      .gempy-highlights { grid-template-columns: 1fr; }
+      .gempy-methodology { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .model-selector { grid-template-columns: 1fr; }
+      .model-explorer { padding: 16px; }
+      .model-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .model-tab { width: 100%; }
+      .model-image-frame { min-height: 200px; }
+    }
+    @media (max-width: 430px) {
+      .detail-topbar { align-items: flex-start; }
+      .detail-back { font-size: .82rem; }
+      .gempy-methodology { grid-template-columns: 1fr; }
+      .model-resources { align-items: stretch; }
+      .model-download { justify-content: center; }
+      .image-lightbox { padding: 12px; }
+    }
+  </style>
+</head>
+
+<body class="detail-page">
+
+  <!-- BARRA SUPERIOR -->
+  <div class="detail-topbar">
+    <a class="detail-back" href="../index.html#proyectos">
+      ← Volver a proyectos
+    </a>
+
+    <div class="detail-controls">
+      <button
+        id="language-toggle"
+        class="language-toggle notranslate"
+        type="button"
+        aria-label="Cambiar idioma"
+        translate="no">
+        EN
+      </button>
+
+      <button
+        id="theme-toggle"
+        class="theme-toggle"
+        type="button"
+        aria-label="Cambiar tema"
+        aria-pressed="false">
+        <span class="theme-icon">☾</span>
+      </button>
+    </div>
+  </div>
+
+  <main class="detail-container">
+
+    <!-- ENCABEZADO -->
+    <header class="detail-header">
+      <span class="detail-category">
+        Modelamiento geológico · Geociencias computacionales
+      </span>
+
+      <h1 class="detail-title">
+        Modelamiento  3D de secciones geológicas con GemPy
+      </h1>
+
+      <p class="detail-intro gempy-intro">
+        Desarrollo de modelos geológicos tridimensionales a partir de
+        información sísmica y cartográfica de la cuenca Sinú–San Jacinto,
+        mediante herramientas de modelamiento geológico computacional de libre acceso.
+        El trabajo incluyó la construcción de modelos geológicos y la
+        generación de modelos de distribución de velocidades asociados. Proyecto de investigación P3925 del grupo HDSP en el que participe como auxiliar de investigación.
+      </p>
+    </header>
+
+    <!-- CONTEXTO -->
+    <section class="detail-section">
+      <h2>Contexto del proyecto</h2>
+
+      <p class="gempy-intro">
+        El trabajo partió de la revisión del Atlas Sísmico de Colombia
+        y de la selección de zonas de interés en secciones sísmicas
+        y planchas geológicas de la cuenca Sinú–San Jacinto.
+        A partir de esta información se construyeron modelos
+        tridimensionales a escala utilizando GemPy, incorporando datos
+        geológicos y estructurales para representar la geometría
+        de las unidades y superficies interpretadas.
+      </p>
+
+      <div class="gempy-highlights">
+        <div class="gempy-highlight">
+          <strong>50</strong>
+          <span>Modelos geológicos desarrollados</span>
+        </div>
+
+        <div class="gempy-highlight">
+          <strong>3</strong>
+          <span>Ejemplos seleccionados para explorar</span>
+        </div>
+
+        <div class="gempy-highlight">
+          <strong>2</strong>
+          <span>Fuentes principales: atlas sísmico y cartografía geológica</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- METODOLOGÍA -->
+    <section class="detail-section">
+      <h2>Proceso de modelamiento</h2>
+
+      <div class="gempy-methodology">
+
+        <div class="gempy-method-step">
+          <span class="step-number">1</span>
+          <h3>Selección de información</h3>
+          <p>
+            Identificación de zonas de interés en secciones
+            sísmicas y planchas geológicas.
+          </p>
+        </div>
+
+        <div class="gempy-method-step">
+          <span class="step-number">2</span>
+          <h3>Datos estructurales</h3>
+          <p>
+            Preparación de puntos y orientaciones estructurales para
+            representar las superficies geológicas.
+          </p>
+        </div>
+
+        <div class="gempy-method-step">
+          <span class="step-number">3</span>
+          <h3>Modelamiento 3D</h3>
+          <p>
+            Construcción de modelos geológicos y análisis
+            de sus campos escalares.
+          </p>
+        </div>
+
+        <div class="gempy-method-step">
+          <span class="step-number">4</span>
+          <h3>Modelo de velocidades</h3>
+          <p>
+            Generación de modelos de distribución de
+            velocidades asociados a cada modelo geológico.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- EXPLORADOR -->
+    <section class="detail-section" id="explorador-modelos">
+
+      <h2>Explorador de modelos</h2>
+
+      <p class="gempy-intro">
+        Explora tres ejemplos del trabajo de modelamiento.
+        Cada uno permite consultar la información de referencia,
+        los datos estructurales, el modelo escalar, el resultado
+        geológico tridimensional y su modelo de velocidades.
+      </p>
+
+      <!-- SELECTOR DE MODELOS -->
+      <div class="model-selector" role="group" aria-label="Seleccionar modelo">
+
+        <button
+          class="model-select-button active"
+          type="button"
+          data-model="modelo-01"
+          aria-pressed="true">
+
+          <span class="model-select-number">MODELO 01</span>
+          <strong>Modelamiento sísmico</strong>
+          <small>Ejemplo construido a partir de una sección sísmica.</small>
+        </button>
+
+        <button
+          class="model-select-button"
+          type="button"
+          data-model="modelo-02"
+          aria-pressed="false">
+
+          <span class="model-select-number">MODELO 02</span>
+          <strong>Modelamiento sísmico</strong>
+          <small>Segundo ejemplo a partir de información sísmica.</small>
+        </button>
+
+        <button
+          class="model-select-button"
+          type="button"
+          data-model="modelo-03"
+          aria-pressed="false">
+
+          <span class="model-select-number">MODELO 03</span>
+          <strong>Modelamiento cartográfico</strong>
+          <small>Ejemplo construido a partir de una corte geológico.</small>
+        </button>
+
+      </div>
+
+      <!-- EXPLORADOR MODELO 01 -->
+      <div class="model-explorer">
+
+        <article class="model-content active" id="modelo-01">
+
+          <div class="model-heading">
+            <h3>Modelo 01 · Sección sísmica</h3>
+            <p>
+              Visualización de las etapas de construcción del primer
+              modelo. La información específica de la línea y su
+              identificación podrá incorporarse posteriormente.
+            </p>
+          </div>
+
+          <div class="model-tabs" role="tablist" aria-label="Vistas del modelo 01">
+            <button class="model-tab active" type="button" data-view="fuente">
+              Sección de referencia
+            </button>
+            <button class="model-tab" type="button" data-view="puntos">
+              Puntos y orientaciones
+            </button>
+            <button class="model-tab" type="button" data-view="escalar">
+              Modelo escalar
+            </button>
+            <button class="model-tab" type="button" data-view="modelo">
+              Modelo geológico 2D
+            </button>
+            <button class="model-tab" type="button" data-view="geologico">
+              Modelo geológico 3D
+            </button>
+            <button class="model-tab" type="button" data-view="velocidades">
+              Modelo de velocidades
+            </button>
+          </div>
+
+          <div class="model-view active" data-panel="fuente">
+            <div class="model-image-frame">
+              <img src="../assets/images/projects/gempy/modelo-01/seccion-fuente.jpg"
+                   alt="Sección sísmica de referencia del modelo 01">
+              <div class="model-image-placeholder" hidden>
+                <div class="placeholder-icon">▧</div>
+                <strong>Imagen pendiente: sección de referencia</strong>
+                <span>Ubicación: assets/images/projects/gempy/modelo-01/seccion-fuente.jpg</span>
+              </div>
+            </div>
+            <p class="model-view-caption">
+              Sección sísmica utilizada como información de referencia
+              para la construcción del modelo.
+            </p>
+          </div>
+
+          <div class="model-view" data-panel="puntos">
+            <div class="model-image-frame">
+              <img src="../assets/images/projects/gempy/modelo-01/puntos-orientaciones.png"
+                   alt="Puntos y orientaciones estructurales del modelo 01">
+              <div class="model-image-placeholder" hidden>
+                <div class="placeholder-icon">▧</div>
+                <strong>Imagen pendiente: puntos y orientaciones</strong>
+                <span>Ubicación: assets/images/projects/gempy/modelo-01/puntos-orientaciones.jpg</span>
+              </div>
+            </div>
+            <p class="model-view-caption">
+              Distribución de los puntos y orientaciones estructurales
+              utilizados para definir las superficies geológicas.
+            </p>
+          </div>
+
+          <div class="model-view" data-panel="escalar">
+            <div class="model-image-frame">
+              <img src="../assets/images/projects/gempy/modelo-01/modelo-escalar.png"
+                   alt="Campo escalar del modelo geológico 01">
+              <div class="model-image-placeholder" hidden>
+                <div class="placeholder-icon">▧</div>
+                <strong>Imagen pendiente: modelo escalar</strong>
+                <span>Ubicación: assets/images/projects/gempy/modelo-01/modelo-escalar.jpg</span>
+              </div>
+            </div>
+            <p class="model-view-caption">
+              Representación del campo escalar obtenido durante
+              el proceso de modelamiento geológico.
+            </p>
+          </div>
+
+        <div class="model-view" data-panel="modelo">
+            <div class="model-image-frame">
+              <img src="../assets/images/projects/gempy/modelo-01/modelo2D.png"
+                   alt="modelo 2D del modelo geológico 01">
+              <div class="model-image-placeholder" hidden>
+                <div class="placeholder-icon">▧</div>
+                <strong>Imagen pendiente: modelo 2D</strong>
+                <span>Ubicación: assets/images/projects/gempy/modelo-01/modelo2D.png</span>
+              </div>
+            </div>
+            <p class="model-view-caption">
+            Resultado bidimensional de la geometría de las
+            superficies y unidades geológicas interpretadas.
+            </p>
+          </div>
+
+          <div class="model-view" data-panel="geologico">
+            <div class="model-image-frame">
+              <img src="../assets/images/projects/gempy/modelo-01/modelo-geologico.png"
+                   alt="Resultado del modelo geológico tridimensional 01">
+              <div class="model-image-placeholder" hidden>
+                <div class="placeholder-icon">▧</div>
+                <strong>Imagen pendiente: modelo geológico 3D</strong>
+                <span>Ubicación: assets/images/projects/gempy/modelo-01/modelo-geologico.jpg</span>
+              </div>
+            </div>
+            <p class="model-view-caption">
+              Resultado tridimensional de la geometría de las
+              superficies y unidades geológicas interpretadas.
+            </p>
+          </div>
+
+          <div class="model-view" data-panel="velocidades">
+            <div class="model-image-frame">
+              <img src="../assets/images/projects/gempy/modelo-01/modelo-velocidades.png"
+                   alt="Modelo de velocidades asociado al modelo geológico 01">
+              <div class="model-image-placeholder" hidden>
+                <div class="placeholder-icon">▧</div>
+                <strong>Imagen pendiente: modelo de velocidades</strong>
+                <span>Ubicación: assets/images/projects/gempy/modelo-01/modelo-velocidades.jpg</span>
+              </div>
+            </div>
+            <p class="model-view-caption">
+              Distribución de velocidades asociada al modelo
+              geológico tridimensional.
+            </p>
+          </div>
+
+          <div class="model-resources">
+            <div class="model-resource-info">
+              <div class="model-resource-icon">⌘</div>
+              <div>
+                <strong>Notebook del modelo 01</strong>
+                <small>Procedimiento de modelamiento geológico y modelo de velocidades.</small>
+              </div>
+            </div>
+
+            <a class="model-download"
+               href="../assets/documents/gempy/modelo-01.ipynb"
+               download="Modelo_01_GemPy.ipynb">
+              Descargar notebook ↓
+            </a>
+          </div>
+
+        </article>
+
+        <!-- EXPLORADOR MODELO 02 -->
+        <article class="model-content" id="modelo-02">
+
+          <div class="model-heading">
+            <h3>Modelo 02 · Sección sísmica</h3>
+            <p>
+              Segundo ejemplo de modelamiento tridimensional a partir
+              de información sísmica.
+            </p>
+          </div>
+
+          <div class="model-tabs" role="tablist" aria-label="Vistas del modelo 02">
+            <button class="model-tab active" type="button" data-view="fuente">
+              Sección de referencia
+            </button>
+            <button class="model-tab" type="button" data-view="puntos">
+              Puntos y orientaciones
+            </button>
+            <button class="model-tab" type="button" data-view="escalar">
+              Modelo escalar
+            </button>
+            <button class="model-tab" type="button" data-view="modelo">
+              Modelo geológico 2D
+            </button>
+            <button class="model-tab" type="button" data-view="geologico">
+              Modelo geológico 3D
+            </button>
+            <button class="model-tab" type="button" data-view="velocidades">
+              Modelo de velocidades
+            </button>
+          </div>
+
+          <div class="model-view active" data-panel="fuente">
+            <div class="model-image-frame">
+              <img src="../assets/images/projects/gempy/modelo-02/seccion-fuente.jpg"
+                   alt="Sección sísmica de referencia del modelo 02">
+              <div class="model-image-placeholder" hidden>
+                <div class="placeholder-icon">▧</div>
+                <strong>Imagen pendiente: sección de referencia</strong>
+                <span>Ubicación: assets/images/projects/gempy/modelo-02/seccion-fuente.jpg</span>
+              </div>
+            </div>
+            <p class="model-view-caption">
+              Sección sísmica utilizada como referencia para el modelo (m/s).
+            </p>
+          </div>
+
+          <div class="model-view" data-panel="puntos">
+            <div class="model-image-frame">
+              <img src="../assets/images/projects/gempy/modelo-02/puntos-orientaciones.png"
+                   alt="Puntos y orientaciones estructurales del modelo 02">
+              <div class="model-image-placeholder" hidden>
+                <div class="placeholder-icon">▧</div>
+                <strong>Imagen pendiente: puntos y orientaciones</strong>
+                <span>Ubicación: assets/images/projects/gempy/modelo-02/puntos-orientaciones.png</span>
+              </div>
+            </div>
+            <p class="model-view-caption">
+              Datos estructurales empleados para definir las superficies.
+            </p>
+          </div>
+
+          <div class="model-view" data-panel="escalar">
+            <div class="model-image-frame">
+              <img src="../assets/images/projects/gempy/modelo-02/modelo-escalar.png"
+                   alt="Campo escalar del modelo geológico 02">
+              <div class="model-image-placeholder" hidden>
+                <div class="placeholder-icon">▧</div>
+                <strong>Imagen pendiente: modelo escalar</strong>
+                <span>Ubicación: assets/images/projects/gempy/modelo-02/modelo-escalar.jpg</span>
+              </div>
+            </div>
+            <p class="model-view-caption">
+              Representación del campo escalar obtenido durante
+              el modelamiento.
+            </p>
+          </div>
+
+          <div class="model-view" data-panel="modelo">
+            <div class="model-image-frame">
+              <img src="../assets/images/projects/gempy/modelo-02/modelo2D.png"
+                   alt="modelo 2D del modelo geológico 02">
+              <div class="model-image-placeholder" hidden>
+                <div class="placeholder-icon">▧</div>
+                <strong>Imagen pendiente: modelo 2D</strong>
+                <span>Ubicación: assets/images/projects/gempy/modelo-02/modelo2D.png</span>
+              </div>
+            </div>
+            <p class="model-view-caption">
+            Resultado bidimensional de la geometría de las
+            superficies y unidades geológicas interpretadas.
+            </p>
+          </div>
+
+          <div class="model-view" data-panel="geologico">
+            <div class="model-image-frame">
+              <img src="../assets/images/projects/gempy/modelo-02/modelo-geologico.png"
+                   alt="Resultado del modelo geológico tridimensional 02">
+              <div class="model-image-placeholder" hidden>
+                <div class="placeholder-icon">▧</div>
+                <strong>Imagen pendiente: modelo geológico 3D</strong>
+                <span>Ubicación: assets/images/projects/gempy/modelo-02/modelo-geologico.jpg</span>
+              </div>
+            </div>
+            <p class="model-view-caption">
+              Resultado tridimensional de las superficies geológicas.
+            </p>
+          </div>
+
+          <div class="model-view" data-panel="velocidades">
+            <div class="model-image-frame">
+              <img src="../assets/images/projects/gempy/modelo-02/modelo-velocidades.png"
+                   alt="Modelo de velocidades asociado al modelo geológico 02">
+              <div class="model-image-placeholder" hidden>
+                <div class="placeholder-icon">▧</div>
+                <strong>Imagen pendiente: modelo de velocidades</strong>
+                <span>Ubicación: assets/images/projects/gempy/modelo-02/modelo-velocidades.jpg</span>
+              </div>
+            </div>
+            <p class="model-view-caption">
+              Distribución de velocidades asociada al modelo geológico (m/s).
+            </p>
+          </div>
+
+          <div class="model-resources">
+            <div class="model-resource-info">
+              <div class="model-resource-icon">⌘</div>
+              <div>
+                <strong>Notebook del modelo 02</strong>
+                <small>Procedimiento de modelamiento geológico y modelo de velocidades.</small>
+              </div>
+            </div>
+
+            <a class="model-download"
+               href="../assets/documents/gempy/modelo-02.ipynb"
+               download="Modelo_02_GemPy.ipynb">
+              Descargar notebook ↓
+            </a>
+          </div>
+
+        </article>
+
+        <!-- EXPLORADOR MODELO 03 -->
+        <article class="model-content" id="modelo-03">
+
+          <div class="model-heading">
+            <h3>Modelo 03 · Plancha geológica</h3>
+            <p>
+              Ejemplo de modelamiento tridimensional construido
+              a partir de un corte geológico de la cuenca.
+            </p>
+          </div>
+
+          <div class="model-tabs" role="tablist" aria-label="Vistas del modelo 03">
+            <button class="model-tab active" type="button" data-view="fuente">
+                Secciónde referencia
+            </button>
+            <button class="model-tab" type="button" data-view="puntos">
+              Puntos y orientaciones
+            </button>
+            <button class="model-tab" type="button" data-view="escalar">
+              Modelo escalar
+            </button>
+            <button class="model-tab" type="button" data-view="modelo">
+              Modelo geológico 2D
+            </button>
+            <button class="model-tab" type="button" data-view="geologico">
+              Modelo geológico 3D
+            </button>
+            <button class="model-tab" type="button" data-view="velocidades">
+              Modelo de velocidades
+            </button>
+          </div>
+
+          <div class="model-view active" data-panel="fuente">
+            <div class="model-image-frame">
+              <img src="../assets/images/projects/gempy/modelo-03/plancha-fuente.png"
+                   alt="Plancha geológica de referencia del modelo 03">
+              <div class="model-image-placeholder" hidden>
+                <div class="placeholder-icon">▧</div>
+                <strong>Imagen pendiente: plancha geológica</strong>
+                <span>Ubicación: assets/images/projects/gempy/modelo-03/plancha-fuente.jpg</span>
+              </div>
+            </div>
+            <p class="model-view-caption">
+              Información geológica utilizada como referencia
+              para la construcción del modelo.
+            </p>
+          </div>
+
+          <div class="model-view" data-panel="puntos">
+            <div class="model-image-frame">
+              <img src="../assets/images/projects/gempy/modelo-03/puntos-orientaciones.png"
+                   alt="Puntos y orientaciones estructurales del modelo 03">
+              <div class="model-image-placeholder" hidden>
+                <div class="placeholder-icon">▧</div>
+                <strong>Imagen pendiente: puntos y orientaciones</strong>
+                <span>Ubicación: assets/images/projects/gempy/modelo-03/puntos-orientaciones.jpg</span>
+              </div>
+            </div>
+            <p class="model-view-caption">
+              Datos estructurales empleados para definir las superficies.
+            </p>
+          </div>
+
+          <div class="model-view" data-panel="escalar">
+            <div class="model-image-frame">
+              <img src="../assets/images/projects/gempy/modelo-03/modelo-escalar.png"
+                   alt="Campo escalar del modelo geológico 03">
+              <div class="model-image-placeholder" hidden>
+                <div class="placeholder-icon">▧</div>
+                <strong>Imagen pendiente: modelo escalar</strong>
+                <span>Ubicación: assets/images/projects/gempy/modelo-03/modelo-escalar.jpg</span>
+              </div>
+            </div>
+            <p class="model-view-caption">
+              Representación del campo escalar obtenido durante
+              el modelamiento.
+            </p>
+          </div>
+
+            <div class="model-view" data-panel="modelo">
+            <div class="model-image-frame">
+              <img src="../assets/images/projects/gempy/modelo-03/modelo2D.png"
+                   alt="modelo 2D del modelo geológico 03">
+              <div class="model-image-placeholder" hidden>
+                <div class="placeholder-icon">▧</div>
+                <strong>Imagen pendiente: modelo 2D</strong>
+                <span>Ubicación: assets/images/projects/gempy/modelo-03/modelo2D.png</span>
+              </div>
+            </div>
+            <p class="model-view-caption">
+            Resultado bidimensional de la geometría de las
+            superficies y unidades geológicas interpretadas.
+            </p>
+          </div>
+
+            <div class="model-view" data-panel="geologico">
+            <div class="model-image-frame">
+              <img src="../assets/images/projects/gempy/modelo-03/modelo-geologico.png"
+                   alt="Resultado del modelo geológico tridimensional 03">
+              <div class="model-image-placeholder" hidden>
+                <div class="placeholder-icon">▧</div>
+                <strong>Imagen pendiente: modelo geológico 3D</strong>
+                <span>Ubicación: assets/images/projects/gempy/modelo-03/modelo-geologico.png  </span>
+              </div>
+            </div>
+            <p class="model-view-caption">
+              Resultado tridimensional de las superficies geológicas.
+            </p>
+          </div>
+
+          <div class="model-view" data-panel="velocidades">
+            <div class="model-image-frame">
+              <img src="../assets/images/projects/gempy/modelo-03/modelo-velocidades.png"
+                   alt="Modelo de velocidades asociado al modelo geológico 03">
+              <div class="model-image-placeholder" hidden>
+                <div class="placeholder-icon">▧</div>
+                <strong>Imagen pendiente: modelo de velocidades</strong>
+                <span>Ubicación: assets/images/projects/gempy/modelo-03/modelo-velocidades.jpg</span>
+              </div>
+            </div>
+            <p class="model-view-caption">
+              Distribución de velocidades asociada al modelo geológico (m/s).
+            </p>
+          </div>
+
+          <div class="model-resources">
+            <div class="model-resource-info">
+              <div class="model-resource-icon">⌘</div>
+              <div>
+                <strong>Notebook del modelo 03</strong>
+                <small>Procedimiento de modelamiento geológico y modelo de velocidades.</small>
+              </div>
+            </div>
+
+            <a class="model-download"
+               href="../assets/documents/gempy/modelo-03.ipynb"
+               download="Modelo_03_GemPy.ipynb">
+              Descargar notebook ↓
+            </a>
+          </div>
+
+        </article>
+
+      </div>
+
+      <div class="gempy-note">
+        <strong>Nota:</strong> Los tres modelos presentados corresponden
+        a ejemplos seleccionados de un conjunto de 50 modelos desarrollados.
+        Las imágenes permiten consultar las diferentes etapas de
+        modelamiento, mientras que los notebooks (.ipynb) contienen el procedimiento
+        computacional correspondiente a cada ejemplo.
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- PIE DE PÁGINA -->
+    <footer class="detail-footer">
+      Shaireth Gizell Carvajal Sinuco · Geóloga
+    </footer>
+
+  <!-- VISOR DE IMÁGENES AMPLIADAS -->
+  <div class="image-lightbox" id="image-lightbox" aria-label="Imagen ampliada">
+    <button class="lightbox-close" type="button" aria-label="Cerrar imagen">
+      ×
+    </button>
+    <img src="" alt="Imagen ampliada del modelo">
+  </div>
+
+  <!-- GOOGLE TRANSLATE -->
+  <div class="gtranslate_wrapper" style="display:none;"></div>
+
+  <script>
+    window.gtranslateSettings = {
+      default_language: "es",
+      languages: ["es", "en"],
+      wrapper_selector: ".gtranslate_wrapper"
+    };
+  </script>
+
+  <script src="https://cdn.gtranslate.net/widgets/latest/dropdown.js" defer></script>
+
+  <script src="../assets/js/language.js"></script>
+  <script src="../assets/js/theme.js"></script>
+
+  <!-- INTERACTIVIDAD DEL EXPLORADOR -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+      // Mostrar espacios de reserva cuando todavía no existe una imagen.
+      document.querySelectorAll(".model-image-frame img").forEach(function (img) {
+        img.addEventListener("error", function () {
+          img.hidden = true;
+          const placeholder = img.parentElement.querySelector(
+            ".model-image-placeholder"
+          );
+          if (placeholder) placeholder.hidden = false;
+        });
+
+        // También comprueba imágenes que ya fallaron al cargar.
+        if (img.complete && img.naturalWidth === 0) {
+          img.hidden = true;
+          const placeholder = img.parentElement.querySelector(
+            ".model-image-placeholder"
+          );
+          if (placeholder) placeholder.hidden = false;
+        }
+      });
+
+      // Selector de modelos.
+      const modelButtons = document.querySelectorAll(".model-select-button");
+      const modelContents = document.querySelectorAll(".model-content");
+
+      modelButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+          const selectedModel = button.dataset.model;
+
+          modelButtons.forEach(function (item) {
+            const active = item === button;
+            item.classList.toggle("active", active);
+            item.setAttribute("aria-pressed", active ? "true" : "false");
+          });
+
+          modelContents.forEach(function (content) {
+            content.classList.toggle(
+              "active",
+              content.id === selectedModel
+            );
+          });
+        });
+      });
+
+      // Pestañas de cada modelo.
+      modelContents.forEach(function (model) {
+        const tabs = model.querySelectorAll(".model-tab");
+        const panels = model.querySelectorAll(".model-view");
+
+        tabs.forEach(function (tab) {
+          tab.addEventListener("click", function () {
+            const selectedView = tab.dataset.view;
+
+            tabs.forEach(function (item) {
+              item.classList.toggle("active", item === tab);
+            });
+
+            panels.forEach(function (panel) {
+              panel.classList.toggle(
+                "active",
+                panel.dataset.panel === selectedView
+              );
+            });
+          });
+        });
+      });
+
+      // Ampliación de imágenes.
+      const lightbox = document.getElementById("image-lightbox");
+      const lightboxImage = lightbox.querySelector("img");
+      const closeButton = lightbox.querySelector(".lightbox-close");
+
+      document.querySelectorAll(".model-image-frame img").forEach(function (img) {
+        img.addEventListener("click", function () {
+          if (img.hidden || !img.src || img.naturalWidth === 0) return;
+
+          lightboxImage.src = img.src;
+          lightboxImage.alt = img.alt;
+          lightbox.classList.add("active");
+        });
+      });
+
+      function closeLightbox() {
+        lightbox.classList.remove("active");
+        lightboxImage.src = "";
+      }
+
+      closeButton.addEventListener("click", closeLightbox);
+
+      lightbox.addEventListener("click", function (event) {
+        if (event.target === lightbox) {
+          closeLightbox();
+        }
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+          closeLightbox();
+        }
+      });
+
+      // Evitar enlaces de descarga que apunten a notebooks todavía ausentes.
+      document.querySelectorAll(".model-download").forEach(function (link) {
+        fetch(link.href, { method: "HEAD" })
+          .then(function (response) {
+            if (!response.ok) {
+              link.classList.add("disabled");
+              link.setAttribute("aria-disabled", "true");
+              link.title = "Añade primero el notebook a la ruta indicada.";
+            }
+          })
+          .catch(function () {
+            // No bloquea la página si el navegador no permite comprobarlo.
+          });
+      });
+
+    });
+  </script>
+
+</body>
+</html>

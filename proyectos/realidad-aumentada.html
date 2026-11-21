@@ -1,0 +1,694 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Proyecto GAIRA: fotogrametría y modelado 3D de muestras geológicas mediante Agisoft Metashape para la enseñanza de las geociencias.">
+  <title>Fotogrametría y modelado 3D | Shaireth Carvajal</title>
+
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/themes.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --project-blue: #4A536D;
+      --project-sand: #D8C5A5;
+      --project-ochre: #B87943;
+      --project-terracotta: #A65F50;
+      --project-moss: #687C62;
+      --page-background: #F4F2ED;
+      --page-surface: #FFFFFF;
+      --page-text: #303746;
+      --page-muted: #697386;
+      --page-border: rgba(74, 83, 109, 0.16);
+    }
+
+    :root[data-theme="dark"] {
+      --page-background: #171B24;
+      --page-surface: #222936;
+      --page-text: #E9EAF0;
+      --page-muted: #AAB2C0;
+      --page-border: rgba(216, 197, 165, 0.18);
+    }
+
+    body {
+      background: var(--page-background);
+      color: var(--page-text);
+      font-family: "Inter", sans-serif;
+    }
+
+    .detail-page {
+      width: min(1080px, 90%);
+      margin: 0 auto;
+      padding: 28px 0 42px;
+    }
+
+    .detail-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 34px;
+    }
+
+    .detail-back {
+      color: var(--project-blue);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    :root[data-theme="dark"] .detail-back {
+      color: var(--project-sand);
+    }
+
+    .detail-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .detail-category {
+      color: var(--project-ochre);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .detail-title {
+      color: var(--page-text);
+      font-family: "Poppins", sans-serif;
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      line-height: 1.2;
+      margin: 0 0 12px;
+    }
+
+    .detail-meta {
+      color: var(--page-muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 22px;
+    }
+
+    .detail-intro {
+      max-width: 950px;
+      background: var(--page-surface);
+      border-left: 4px solid var(--project-ochre);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 0 0 28px !important;
+      line-height: 1.75;
+      color: var(--page-text);
+    }
+
+    .detail-section {
+      margin: 26px 0 0 !important;
+      padding: 0 !important;
+      min-height: 0 !important;
+    }
+
+    .detail-section h2 {
+      font-family: "Poppins", sans-serif;
+      color: var(--page-text);
+      font-size: 1.35rem;
+      margin: 0 0 10px !important;
+      padding: 0 !important;
+    }
+
+    .detail-section > p {
+      color: var(--page-muted);
+      line-height: 1.7;
+      margin: 0 0 16px !important;
+      padding: 0 !important;
+    }
+
+    .section-symbol {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: rgba(184, 121, 67, 0.13);
+      color: var(--project-ochre);
+      margin-right: 9px;
+      font-size: 1.05rem;
+      vertical-align: middle;
+    }
+
+    /* Equipo de trabajo */
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .team-card {
+      background: var(--page-surface);
+      border: 1px solid var(--page-border);
+      border-radius: 10px;
+      padding: 17px 10px;
+      text-align: center;
+    }
+
+    .team-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      margin: 0 auto 9px;
+      border-radius: 50%;
+      background: rgba(74, 83, 109, 0.11);
+      color: var(--project-blue);
+      font-size: 1.1rem;
+    }
+
+    :root[data-theme="dark"] .team-icon {
+      color: var(--project-sand);
+    }
+
+    .team-card h3 {
+      color: var(--page-text);
+      font-family: "Poppins", sans-serif;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    .team-role {
+      display: block;
+      color: var(--page-muted);
+      font-size: 0.75rem;
+      margin-top: 5px;
+    }
+
+    /* Indicadores del proyecto */
+
+    .project-facts {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .fact-card {
+      background: var(--page-surface);
+      border: 1px solid var(--page-border);
+      border-radius: 10px;
+      padding: 17px;
+      text-align: center;
+    }
+
+    .fact-value {
+      display: block;
+      color: var(--project-ochre);
+      font-family: "Poppins", sans-serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+    }
+
+    .fact-label {
+      display: block;
+      color: var(--page-muted);
+      font-size: 0.82rem;
+      margin-top: 4px;
+    }
+
+    /* Modelos 3D */
+
+    .models-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      margin-top: 18px;
+    }
+
+    .model-card {
+      min-width: 0;
+      overflow: hidden;
+      background: var(--page-surface);
+      border: 1px solid var(--page-border);
+      border-radius: 12px;
+    }
+
+    .model-viewer {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: #FFFFFF;
+    }
+
+    .model-viewer iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .model-info {
+      padding: 14px 17px 16px;
+    }
+
+    .model-info h3 {
+      color: var(--page-text);
+      font-family: "Poppins", sans-serif;
+      font-size: 0.98rem;
+      margin: 0 0 4px;
+    }
+
+    .model-info p {
+      color: var(--page-muted);
+      font-size: 0.8rem;
+      margin: 0;
+    }
+
+    /* Manuales */
+
+    .manuals-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .manual-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--page-surface);
+      border: 1px solid var(--page-border);
+      border-radius: 10px;
+      padding: 18px;
+    }
+
+    .manual-icon {
+      display: flex;
+      flex: 0 0 44px;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(74, 83, 109, 0.12);
+      font-size: 1.35rem;
+    }
+
+    .manual-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .manual-content h3 {
+      color: var(--page-text);
+      font-family: "Poppins", sans-serif;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      margin: 0 0 5px;
+    }
+
+    .manual-link {
+      color: var(--project-terracotta);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .manual-link:hover {
+      text-decoration: underline;
+    }
+
+    .sketchfab-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      color: var(--project-terracotta);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .sketchfab-link:hover {
+      text-decoration: underline;
+    }
+
+    .detail-footer {
+      border-top: 1px solid rgba(74, 83, 109, 0.20);
+      margin-top: 36px;
+      padding-top: 18px;
+      color: var(--page-muted);
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    @media (max-width: 850px) {
+      .team-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 700px) {
+      .detail-page {
+        width: 92%;
+        padding-top: 20px;
+      }
+
+      .detail-topbar {
+        margin-bottom: 26px;
+      }
+
+      .detail-intro {
+        padding: 17px;
+      }
+
+      .models-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .manuals-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .detail-topbar {
+        align-items: flex-start;
+      }
+
+      .detail-back {
+        font-size: 0.82rem;
+      }
+
+      .team-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .project-facts {
+        gap: 7px;
+      }
+
+      .fact-card {
+        padding: 12px 6px;
+      }
+
+      .fact-value {
+        font-size: 1.35rem;
+      }
+
+      .fact-label {
+        font-size: 0.72rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="detail-page">
+
+    <div class="detail-topbar">
+      <a class="detail-back" href="../index.html#proyectos">← Volver a proyectos</a>
+
+      <div class="detail-controls">
+        <button id="language-toggle" class="language-toggle notranslate"
+          type="button" aria-label="Cambiar idioma" translate="no">EN</button>
+
+        <button id="theme-toggle" class="theme-toggle"
+          type="button" aria-label="Cambiar tema" aria-pressed="false">
+          <span class="theme-icon">☾</span>
+        </button>
+      </div>
+    </div>
+
+    <header>
+      <div class="detail-category">
+        Fotogrametría · Modelado 3D · Realidad aumentada
+      </div>
+
+      <h1 class="detail-title">
+        Fotogrametría y modelado 3D de muestras geológicas
+      </h1>
+
+      <div class="detail-meta">
+        Proyecto GAIRA · Convocatoria interna INNOVA-TIC 2025
+        <br>
+        Segundo semestre de 2025 · UIS
+      </div>
+    </header>
+
+    <p class="detail-intro">
+      En el marco de la convocatoria interna INNOVA-TIC 2025 surgió
+      GAIRA (Geología + Inteligencia Artificial + Realidad Aumentada),
+      una iniciativa orientada a fortalecer la enseñanza de las
+      geociencias mediante tecnologías digitales. Como parte del proyecto,
+      desarrollamos modelos tridimensionales de muestras de mano mediante
+      técnicas de fotogrametría, además de manuales para su captura
+      y procesamiento.
+    </p>
+
+    <section class="detail-section">
+      <h2>
+        <span class="section-symbol" aria-hidden="true">♧</span>
+        Equipo de trabajo
+      </h2>
+
+      <div class="team-grid">
+
+        <article class="team-card">
+          <div class="team-icon" aria-hidden="true">👤</div>
+          <h3>Shaireth Gizell Carvajal Sinuco</h3>
+          <span class="team-role">Estudiante</span>
+        </article>
+
+        <article class="team-card">
+          <div class="team-icon" aria-hidden="true">👤</div>
+          <h3>Valentina Galvis Cobos</h3>
+          <span class="team-role">Estudiante</span>
+        </article>
+
+        <article class="team-card">
+          <div class="team-icon" aria-hidden="true">👤</div>
+          <h3>Francisco Alberto Velandia Patiño</h3>
+          <span class="team-role">Profesor</span>
+        </article>
+
+        <article class="team-card">
+          <div class="team-icon" aria-hidden="true">👤</div>
+          <h3>Sergio Andrés García Arias</h3>
+          <span class="team-role">Profesor</span>
+        </article>
+
+        <article class="team-card">
+          <div class="team-icon" aria-hidden="true">👤</div>
+          <h3>Joaquín Andrés Valencia Ortiz</h3>
+          <span class="team-role">Profesor</span>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <h2>
+        <span class="section-symbol" aria-hidden="true">◈</span>
+        Resultados del proyecto
+      </h2>
+
+      <p>
+        Se realizaron 40 modelos tridimensionales de muestras de mano,
+        distribuidos en cuatro grupos: rocas ígneas, sedimentarias,
+        metamórficas y fósiles.
+      </p>
+
+      <div class="project-facts">
+        <div class="fact-card">
+          <span class="fact-value">40</span>
+          <span class="fact-label">Modelos 3D</span>
+        </div>
+
+        <div class="fact-card">
+          <span class="fact-value">4</span>
+          <span class="fact-label">Categorías</span>
+        </div>
+
+        <div class="fact-card">
+          <span class="fact-value">10</span>
+          <span class="fact-label">Muestras por categoría</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <h2>
+        <span class="section-symbol" aria-hidden="true">◇</span>
+        Explora los modelos 3D
+      </h2>
+
+      <p>
+        Explora una muestra representativa de cada categoría.
+        Los modelos pueden rotarse, acercarse y visualizarse
+        interactivamente desde los siguientes visores.
+      </p>
+
+      <div class="models-grid">
+
+        <article class="model-card">
+          <div class="model-viewer">
+            <iframe
+              title="Modelo 3D de escoria basáltica - roca ígnea"
+              src="https://sketchfab.com/models/0af9bdade8f6469fa493377e3c273996/embed"
+              allow="autoplay; fullscreen; xr-spatial-tracking"
+              allowfullscreen
+              mozallowfullscreen="true"
+              webkitallowfullscreen="true">
+            </iframe>
+          </div>
+
+          <div class="model-info">
+            <h3>Rocas ígneas</h3>
+            <p>CG-ING-13-E · Escoria basáltica</p>
+          </div>
+        </article>
+
+        <article class="model-card">
+          <div class="model-viewer">
+            <iframe
+              title="Modelo 3D de arenisca - roca sedimentaria"
+              src="https://sketchfab.com/models/186a344d53594951965ec3ab54aea20a/embed"
+              allow="autoplay; fullscreen; xr-spatial-tracking"
+              allowfullscreen
+              mozallowfullscreen="true"
+              webkitallowfullscreen="true">
+            </iframe>
+          </div>
+
+          <div class="model-info">
+            <h3>Rocas sedimentarias</h3>
+            <p>CG-SDC-06 · Arenisca de grano medio con nódulos</p>
+          </div>
+        </article>
+
+        <article class="model-card">
+          <div class="model-viewer">
+            <iframe
+              title="Modelo 3D de corneana con quiastolita - roca metamórfica"
+              src="https://sketchfab.com/models/7b6ce7b5657b46759504c5871e529d62/embed"
+              allow="autoplay; fullscreen; xr-spatial-tracking"
+              allowfullscreen
+              mozallowfullscreen="true"
+              webkitallowfullscreen="true">
+            </iframe>
+          </div>
+
+          <div class="model-info">
+            <h3>Rocas metamórficas</h3>
+            <p>CG-MET-12 · Corneana con quiastolita</p>
+          </div>
+        </article>
+
+        <article class="model-card">
+          <div class="model-viewer">
+            <iframe
+              title="Modelo 3D de amonita - fósil"
+              src="https://sketchfab.com/models/7869634dfc6542b6accdb11eace2ecf1/embed"
+              allow="autoplay; fullscreen; xr-spatial-tracking"
+              allowfullscreen
+              mozallowfullscreen="true"
+              webkitallowfullscreen="true">
+            </iframe>
+          </div>
+
+          <div class="model-info">
+            <h3>Fósiles</h3>
+            <p>CG-FSL-03 · Amonita</p>
+          </div>
+        </article>
+
+      </div>
+
+      <a class="sketchfab-link"
+        href="https://sketchfab.com/EscgeoUIS/models"
+        target="_blank" rel="noopener noreferrer">
+        Explorar todos los modelos en Sketchfab ↗
+      </a>
+    </section>
+
+    <section class="detail-section">
+      <h2>
+        <span class="section-symbol" aria-hidden="true">▤</span>
+        Manuales técnicos
+      </h2>
+
+      <p>
+        Como parte de los productos del proyecto, elaboramos
+        documentación de apoyo para la captura fotográfica
+        y la generación de modelos tridimensionales.
+      </p>
+
+      <div class="manuals-grid">
+
+        <article class="manual-card">
+          <div class="manual-icon" aria-hidden="true">📷</div>
+
+          <div class="manual-content">
+            <h3>Fotogrametría de rocas y fósiles: manual de captura</h3>
+
+            <a class="manual-link"
+              href="https://drive.google.com/file/d/1uNaUEd8KMO2blwWkPFrq-xebtnqgA9eP/view?usp=sharing"
+              target="_blank" rel="noopener noreferrer">
+              Consultar manual ↗
+            </a>
+          </div>
+        </article>
+
+        <article class="manual-card">
+          <div class="manual-icon" aria-hidden="true">🧊</div>
+
+          <div class="manual-content">
+            <h3>Manual para la elaboración de modelos 3D</h3>
+
+            <a class="manual-link"
+              href="https://drive.google.com/file/d/19qVaMJfWQ6JNt0HKNMJpMcKhb50XOLRW/view?usp=sharing"
+              target="_blank" rel="noopener noreferrer">
+              Consultar manual ↗
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <footer class="detail-footer">
+      Shaireth Gizell Carvajal Sinuco · Geóloga
+    </footer>
+
+  </main>
+
+  <div class="gtranslate_wrapper" style="display:none;"></div>
+
+  <script>
+    window.gtranslateSettings = {
+      default_language: "es",
+      languages: ["es", "en"],
+      wrapper_selector: ".gtranslate_wrapper"
+    };
+  </script>
+
+  <script src="https://cdn.gtranslate.net/widgets/latest/dropdown.js" defer></script>
+  <script src="../assets/js/language.js"></script>
+  <script src="../assets/js/theme.js"></script>
+
+</body>
+</html>
