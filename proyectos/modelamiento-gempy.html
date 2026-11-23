@@ -594,7 +594,7 @@
 
           <span class="model-select-number">MODELO 03</span>
           <strong>Modelamiento cartográfico</strong>
-          <small>Ejemplo construido a partir de una corte geológico.</small>
+          <small>Ejemplo construido a partir de un corte geológico.</small>
         </button>
 
       </div>
@@ -613,7 +613,7 @@
             </p>
           </div>
 
-          <div class="model-tabs" role="tablist" aria-label="Vistas del modelo 01">
+          <div class="model-tabs" role="group" aria-label="Vistas del modelo 01">
             <button class="model-tab active" type="button" data-view="fuente">
               Sección de referencia
             </button>
@@ -759,7 +759,7 @@
             </p>
           </div>
 
-          <div class="model-tabs" role="tablist" aria-label="Vistas del modelo 02">
+          <div class="model-tabs" role="group" aria-label="Vistas del modelo 02">
             <button class="model-tab active" type="button" data-view="fuente">
               Sección de referencia
             </button>
@@ -901,7 +901,7 @@
             </p>
           </div>
 
-          <div class="model-tabs" role="tablist" aria-label="Vistas del modelo 03">
+          <div class="model-tabs" role="group" aria-label="Vistas del modelo 03">
             <button class="model-tab active" type="button" data-view="fuente">
                 Secciónde referencia
             </button>
@@ -1053,7 +1053,8 @@
     </footer>
 
   <!-- VISOR DE IMÁGENES AMPLIADAS -->
-  <div class="image-lightbox" id="image-lightbox" aria-label="Imagen ampliada">
+  <div class="image-lightbox" id="image-lightbox" role="dialog"
+    aria-modal="true" aria-label="Imagen ampliada">
     <button class="lightbox-close" type="button" aria-label="Cerrar imagen">
       ×
     </button>
@@ -1129,11 +1130,18 @@
         const panels = model.querySelectorAll(".model-view");
 
         tabs.forEach(function (tab) {
+          tab.setAttribute(
+            "aria-pressed",
+            String(tab.classList.contains("active"))
+          );
+
           tab.addEventListener("click", function () {
             const selectedView = tab.dataset.view;
 
             tabs.forEach(function (item) {
-              item.classList.toggle("active", item === tab);
+              const active = item === tab;
+              item.classList.toggle("active", active);
+              item.setAttribute("aria-pressed", String(active));
             });
 
             panels.forEach(function (panel) {
@@ -1151,19 +1159,36 @@
       const lightboxImage = lightbox.querySelector("img");
       const closeButton = lightbox.querySelector(".lightbox-close");
 
+      let lastFocusedImage = null;
+
       document.querySelectorAll(".model-image-frame img").forEach(function (img) {
-        img.addEventListener("click", function () {
+        img.setAttribute("tabindex", "0");
+        img.setAttribute("role", "button");
+        img.setAttribute("aria-label", "Ampliar imagen: " + img.alt);
+
+        function openLightbox() {
           if (img.hidden || !img.src || img.naturalWidth === 0) return;
 
+          lastFocusedImage = img;
           lightboxImage.src = img.src;
           lightboxImage.alt = img.alt;
           lightbox.classList.add("active");
+          closeButton.focus();
+        }
+
+        img.addEventListener("click", openLightbox);
+        img.addEventListener("keydown", function (event) {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openLightbox();
+          }
         });
       });
 
       function closeLightbox() {
         lightbox.classList.remove("active");
         lightboxImage.src = "";
+        if (lastFocusedImage) lastFocusedImage.focus();
       }
 
       closeButton.addEventListener("click", closeLightbox);
@@ -1171,6 +1196,13 @@
       lightbox.addEventListener("click", function (event) {
         if (event.target === lightbox) {
           closeLightbox();
+        }
+      });
+
+      lightbox.addEventListener("keydown", function (event) {
+        if (event.key === "Tab") {
+          event.preventDefault();
+          closeButton.focus();
         }
       });
 

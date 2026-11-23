@@ -1485,4 +1485,98 @@ section {
         font-size: 0.68rem;
     }
 
+    }
+
+/* ==========================================
+   SOBRE MI - TARJETAS DE VALORES
+========================================== */
+
+.about-section .section-heading {
+    max-width: none;
+    margin-bottom: 0.5rem;
+}
+
+.about-section .section-heading .section-eyebrow {
+    margin-bottom: 0.2rem;
+}
+
+.about-section .about-content {
+    max-width: none;
+}
+
+.about-section .about-content > p {
+    margin: 0;
+    padding: 0.65rem 1rem 0;
+}
+
+.about-section .about-values-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 1.25rem;
+}
+
+.about-section .about-value-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    padding: 0.65rem;
+    border: 1px solid rgba(232, 182, 168, 0.9);
+    border-radius: 11px;
+    background: var(--background);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.about-section .about-value-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    margin-bottom: 0.45rem;
+    border-radius: 10px;
+    background: var(--color-sand);
+    color: var(--color-primary);
+}
+
+.about-section .about-value-icon svg {
+    display: block;
+    width: 23px;
+    height: 23px;
+    flex-shrink: 0;
+}
+
+.about-section .about-value-card h3 {
+    margin: 0 0 0.15rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.about-section .about-value-card p {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.55;
+}
+
+.about-section .about-value-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-terracotta);
+    box-shadow: 0 6px 20px rgba(41, 38, 61, 0.06);
+}
+
+@media (max-width: 600px) {
+    .about-section .about-values-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+    }
+
+    .about-section .about-value-card {
+        padding: 0.8rem;
+    }
 }
