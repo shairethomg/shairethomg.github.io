@@ -4,9 +4,6 @@
    FASE 2 | BLOQUE 2.2 | ESTILOS GENERALES
    ========================================================= */
 
-/* 1. FUENTES */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Poppins:wght@400;500;600;700&display=swap');
-
 /* 2. VARIABLES DE DISEÑO */
 :root {
     --font-heading: 'Poppins', sans-serif;
@@ -151,7 +148,7 @@ section {
             rgba(15, 20, 30, 0.30),
             rgba(15, 20, 30, 0.45)
         ),
-        url("../images/chicamocha-header.jpg");
+        url("../images/chicamocha-header-optimized.jpg");
 
     background-size: cover;
     background-position: center 52%;
@@ -334,7 +331,51 @@ section {
             transparent 35%
         ),
         var(--background);
+
+        
 }
+
+
+/* =========================================
+   PATRÓN TOPOGRÁFICO — HERO
+========================================= */
+
+.hero-section {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+}
+
+/* Patrón topográfico aprobado para el Hero */
+.hero-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: url("../images/topographic-contours.svg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    opacity: 0.13;
+    pointer-events: none;
+}
+
+/* Tema oscuro */
+:root[data-theme="dark"] .hero-section::before {
+    opacity: 0.22;
+}
+
+/* Adaptación a pantallas pequeñas */
+@media (max-width: 768px) {
+    .hero-section::before {
+        opacity: 0.10;
+    }
+
+    :root[data-theme="dark"] .hero-section::before {
+        opacity: 0.17;
+    }
+}
+
 
 .hero-container {
     width: min(var(--container-width), calc(100% - 48px));
