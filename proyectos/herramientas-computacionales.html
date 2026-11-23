@@ -16,28 +16,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --project-blue: #4A536D;
-      --project-sand: #D8C5A5;
-      --project-ochre: #B87943;
-      --project-terracotta: #A65F50;
-      --project-moss: #687C62;
-      --page-background: #F4F2ED;
-      --page-surface: #FFFFFF;
-      --page-text: #303746;
-      --page-muted: #697386;
-      --page-border: rgba(74, 83, 109, 0.16);
-    }
-
-    :root[data-theme="dark"] {
-      --page-background: #171B24;
-      --page-surface: #222936;
-      --page-text: #E9EAF0;
-      --page-muted: #AAB2C0;
-      --page-border: rgba(216, 197, 165, 0.18);
-    }
-
-    body {
+body {
       background: var(--page-background);
       color: var(--page-text);
       font-family: "Inter", sans-serif;
@@ -138,7 +117,7 @@
       width: 34px;
       height: 34px;
       border-radius: 9px;
-      background: rgba(184, 121, 67, 0.13);
+      background: color-mix(in srgb, var(--color-ochre) 13%, transparent);
       color: var(--project-ochre);
       margin-right: 9px;
       font-size: 1.05rem;
@@ -170,7 +149,7 @@
       justify-content: center;
       margin: 0 auto 9px;
       border-radius: 50%;
-      background: rgba(74, 83, 109, 0.11);
+      background: color-mix(in srgb, var(--color-primary) 11%, transparent);
       color: var(--project-blue);
       font-size: 1.1rem;
     }
@@ -228,7 +207,7 @@
     }
 
     .research-table tbody tr:hover {
-      background: rgba(216, 197, 165, 0.10);
+      background: color-mix(in srgb, var(--color-sand) 10%, transparent);
     }
 
     .case-number {
@@ -238,7 +217,7 @@
       width: 29px;
       height: 29px;
       border-radius: 8px;
-      background: rgba(184, 121, 67, 0.14);
+      background: color-mix(in srgb, var(--color-ochre) 14%, transparent);
       color: var(--project-ochre);
       font-family: "JetBrains Mono", monospace;
       font-size: 0.8rem;
@@ -259,7 +238,7 @@
       display: inline-block;
       padding: 5px 9px;
       border-radius: 6px;
-      background: rgba(104, 124, 98, 0.12);
+      background: color-mix(in srgb, var(--color-moss) 12%, transparent);
       color: var(--project-moss);
       font-size: 0.76rem;
       font-weight: 600;
@@ -268,8 +247,8 @@
     }
 
     :root[data-theme="dark"] .tool-tag {
-      color: #B9D0B2;
-      background: rgba(104, 124, 98, 0.22);
+      color: var(--text-secondary);
+      background: color-mix(in srgb, var(--color-moss) 22%, transparent);
     }
 
     /* Productos */
@@ -298,7 +277,7 @@
       width: 46px;
       height: 46px;
       border-radius: 11px;
-      background: rgba(74, 83, 109, 0.12);
+      background: color-mix(in srgb, var(--color-primary) 12%, transparent);
       font-size: 1.4rem;
       margin-bottom: 13px;
     }
@@ -365,7 +344,7 @@
     }
 
     .detail-footer {
-      border-top: 1px solid rgba(74, 83, 109, 0.20);
+      border-top: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
       margin-top: 36px;
       padding-top: 18px;
       color: var(--page-muted);

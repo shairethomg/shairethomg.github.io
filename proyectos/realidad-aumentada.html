@@ -16,28 +16,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --project-blue: #4A536D;
-      --project-sand: #D8C5A5;
-      --project-ochre: #B87943;
-      --project-terracotta: #A65F50;
-      --project-moss: #687C62;
-      --page-background: #F4F2ED;
-      --page-surface: #FFFFFF;
-      --page-text: #303746;
-      --page-muted: #697386;
-      --page-border: rgba(74, 83, 109, 0.16);
-    }
-
-    :root[data-theme="dark"] {
-      --page-background: #171B24;
-      --page-surface: #222936;
-      --page-text: #E9EAF0;
-      --page-muted: #AAB2C0;
-      --page-border: rgba(216, 197, 165, 0.18);
-    }
-
-    body {
+body {
       background: var(--page-background);
       color: var(--page-text);
       font-family: "Inter", sans-serif;
@@ -138,7 +117,7 @@
       width: 34px;
       height: 34px;
       border-radius: 9px;
-      background: rgba(184, 121, 67, 0.13);
+      background: color-mix(in srgb, var(--color-ochre) 13%, transparent);
       color: var(--project-ochre);
       margin-right: 9px;
       font-size: 1.05rem;
@@ -170,7 +149,7 @@
       height: 38px;
       margin: 0 auto 9px;
       border-radius: 50%;
-      background: rgba(74, 83, 109, 0.11);
+      background: color-mix(in srgb, var(--color-primary) 11%, transparent);
       color: var(--project-blue);
       font-size: 1.1rem;
     }
@@ -247,7 +226,7 @@
       position: relative;
       width: 100%;
       aspect-ratio: 4 / 3;
-      background: #FFFFFF;
+      background: var(--surface);
     }
 
     .model-viewer iframe {
@@ -301,7 +280,7 @@
       width: 44px;
       height: 44px;
       border-radius: 10px;
-      background: rgba(74, 83, 109, 0.12);
+      background: color-mix(in srgb, var(--color-primary) 12%, transparent);
       font-size: 1.35rem;
     }
 
@@ -345,7 +324,7 @@
     }
 
     .detail-footer {
-      border-top: 1px solid rgba(74, 83, 109, 0.20);
+      border-top: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
       margin-top: 36px;
       padding-top: 18px;
       color: var(--page-muted);

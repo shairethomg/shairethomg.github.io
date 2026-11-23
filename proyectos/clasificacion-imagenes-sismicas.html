@@ -19,23 +19,10 @@
     <link rel="stylesheet" href="../assets/css/themes.css">
 
     <style>
-        :root {
-            --project-blue: #4A536D;
-            --project-sand: #D8C5A5;
-            --project-ochre: #B87943;
-            --project-terracotta: #A65F50;
-            --project-moss: #687C62;
-            --project-bg: #F4F2ED;
-            --project-surface: #FFFFFF;
-            --project-text: #202638;
-            --project-muted: #667085;
-            --project-border: #E3DED5;
-        }
-
-        body {
+body {
             margin: 0;
-            background: var(--project-bg);
-            color: var(--project-text);
+            background: var(--background);
+            color: var(--text-primary);
             font-family: 'Inter', sans-serif;
             line-height: 1.7;
         }
@@ -74,7 +61,7 @@
         .detail-title {
             max-width: 850px;
             margin: 0 0 14px;
-            color: var(--project-text);
+            color: var(--text-primary);
             font-family: 'Poppins', sans-serif;
             font-size: clamp(2rem, 5vw, 3.1rem);
             font-weight: 600;
@@ -86,7 +73,7 @@
             flex-wrap: wrap;
             gap: 10px 25px;
             margin-bottom: 20px;
-            color: var(--project-muted);
+            color: var(--text-muted);
             font-size: 0.9rem;
         }
 
@@ -101,11 +88,11 @@
     padding: 18px 24px;
     border-left: 3px solid var(--project-ochre);
     border-radius: 0 10px 10px 0;
-    background: var(--project-surface);
+    background: var(--surface);
 }
         .detail-intro p {
             margin: 0;
-            color: var(--project-muted);
+            color: var(--text-muted);
             font-size: 1.04rem;
         }
 
@@ -117,7 +104,7 @@
 
         .detail-section h2 {
             margin: 0 0 9px;
-            color: var(--project-text);
+            color: var(--text-primary);
             font-family: 'Poppins', sans-serif;
             font-size: 1.55rem;
             font-weight: 600;
@@ -125,7 +112,7 @@
 
         .detail-section > p {
             max-width: 850px;
-            color: var(--project-muted);
+            color: var(--text-muted);
         }
 
         .classification-grid {
@@ -138,9 +125,9 @@
         .class-card {
             min-width: 0;
             overflow: hidden;
-            border: 1px solid var(--project-border);
+            border: 1px solid var(--border);
             border-radius: 12px;
-            background: var(--project-surface);
+            background: var(--surface);
         }
 
         .class-illustration {
@@ -149,7 +136,7 @@
             justify-content: center;
             height: 115px;
             padding: 12px;
-            background: #202638;
+            background: var(--palette-plum);
         }
 
         .class-illustration svg {
@@ -169,7 +156,7 @@
 
         .illustration-note {
             margin-top: 8px;
-            color: var(--project-muted);
+            color: var(--text-muted);
             font-size: 0.78rem;
             font-style: italic;
         }
@@ -177,13 +164,13 @@
         .detail-note {
             margin-top: 38px;
             padding-top: 20px;
-            border-top: 1px solid var(--project-border);
-            color: var(--project-muted);
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
             font-size: 0.88rem;
         }
 
  .detail-footer {
-  border-top: 1px solid rgba(74, 83, 109, 0.20);
+  border-top: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
   margin-top: 36px;
   padding-top: 18px;
   color: var(--page-muted);
@@ -234,16 +221,7 @@
                 font-size: 0.82rem;
             }
         }
-
-        :root[data-theme="dark"] {
-    --project-bg: #171B24;
-    --project-surface: #222938;
-    --project-text: #F0F1F4;
-    --project-muted: #B2BAC8;
-    --project-border: #394253;
-}
-
-        .detail-topbar {
+.detail-topbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -265,9 +243,9 @@
     min-width: 38px;
     height: 38px;
     padding: 0 10px;
-    border: 1px solid var(--project-border);
+    border: 1px solid var(--border);
     border-radius: 8px;
-    background: var(--project-surface);
+    background: var(--surface);
     color: var(--project-blue);
     font-family: 'Inter', sans-serif;
     font-size: 0.85rem;
@@ -368,7 +346,7 @@
                 <article class="class-card">
                     <div class="class-illustration">
                         <svg viewBox="0 0 180 100" role="img" aria-label="Esquema ilustrativo de reflectores planos">
-                            <g stroke="#D8C5A5" stroke-width="2" fill="none">
+                            <g stroke="var(--color-sand)" stroke-width="2" fill="none">
                                 <path d="M5 20 L175 20"/>
                                 <path d="M5 35 L175 35"/>
                                 <path d="M5 50 L175 50"/>
@@ -384,7 +362,7 @@
                 <article class="class-card">
                     <div class="class-illustration">
                         <svg viewBox="0 0 180 100" role="img" aria-label="Esquema ilustrativo de reflectores inclinados">
-                            <g stroke="#D8C5A5" stroke-width="2" fill="none">
+                            <g stroke="var(--color-sand)" stroke-width="2" fill="none">
                                 <path d="M5 10 L175 48"/>
                                 <path d="M5 28 L175 66"/>
                                 <path d="M5 46 L175 84"/>
@@ -399,7 +377,7 @@
                 <article class="class-card">
                     <div class="class-illustration">
                         <svg viewBox="0 0 180 100" role="img" aria-label="Esquema ilustrativo de reflectores plegados">
-                            <g stroke="#D8C5A5" stroke-width="2" fill="none">
+                            <g stroke="var(--color-sand)" stroke-width="2" fill="none">
                                 <path d="M5 22 Q45 5 90 22 T175 22"/>
                                 <path d="M5 38 Q45 21 90 38 T175 38"/>
                                 <path d="M5 54 Q45 37 90 54 T175 54"/>
@@ -415,13 +393,13 @@
                 <article class="class-card">
                     <div class="class-illustration">
                         <svg viewBox="0 0 180 100" role="img" aria-label="Esquema ilustrativo de una sección sin señal definida">
-                            <g stroke="#D8C5A5" stroke-width="1.6" fill="none" opacity="0.65">
+                            <g stroke="var(--color-sand)" stroke-width="1.6" fill="none" opacity="0.65">
                                 <path d="M5 20 L175 20"/>
                                 <path d="M5 40 L175 40"/>
                                 <path d="M5 60 L175 60"/>
                                 <path d="M5 80 L175 80"/>
                             </g>
-                            <path d="M5 50 L175 50" stroke="#A65F50" stroke-width="2" stroke-dasharray="5 6"/>
+                            <path d="M5 50 L175 50" stroke="var(--color-terracotta)" stroke-width="2" stroke-dasharray="5 6"/>
                         </svg>
                     </div>
                     <h3>Sin señal</h3>
@@ -431,13 +409,13 @@
                 <article class="class-card">
                     <div class="class-illustration">
                         <svg viewBox="0 0 180 100" role="img" aria-label="Esquema ilustrativo de reflectores desplazados por una falla">
-                            <g stroke="#D8C5A5" stroke-width="2" fill="none">
+                            <g stroke="var(--color-sand)" stroke-width="2" fill="none">
                                 <path d="M5 20 L75 20 L105 35 L175 35"/>
                                 <path d="M5 38 L75 38 L105 53 L175 53"/>
                                 <path d="M5 56 L75 56 L105 71 L175 71"/>
                                 <path d="M5 74 L75 74 L105 89 L175 89"/>
                             </g>
-                            <path d="M75 5 L105 95" stroke="#A65F50" stroke-width="2.5" stroke-dasharray="5 4"/>
+                            <path d="M75 5 L105 95" stroke="var(--color-terracotta)" stroke-width="2.5" stroke-dasharray="5 4"/>
                         </svg>
                     </div>
                     <h3>Con fallas</h3>

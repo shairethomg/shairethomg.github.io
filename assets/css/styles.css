@@ -9,12 +9,6 @@
 
 /* 2. VARIABLES DE DISEÑO */
 :root {
-    --color-primary: #4A536D;
-    --color-sand: #D8C5A5;
-    --color-ochre: #B87943;
-    --color-terracotta: #A65F50;
-    --color-moss: #687C62;
-
     --font-heading: 'Poppins', sans-serif;
     --font-body: 'Inter', sans-serif;
     --font-technical: 'JetBrains Mono', monospace;
@@ -87,7 +81,7 @@ section {
 
 ::selection {
     background: var(--color-sand);
-    color: #171B24;
+    color: var(--text-primary);
 }
 
 /* 4. CONTENEDORES Y SECCIONES */
@@ -437,7 +431,7 @@ section {
 }
 
 .button-primary:hover {
-    background: #363E55;
+    background: var(--palette-plum);
     transform: translateY(-2px);
 }
 
@@ -615,7 +609,7 @@ section {
         linear-gradient(
             135deg,
             var(--color-primary),
-            #707B91
+            var(--palette-dusty-rose)
         );
     color: #FFFFFF;
     font-family: var(--font-technical);
@@ -892,7 +886,7 @@ section {
 
 .research-card:hover {
     transform: translateY(-5px);
-    border-color: var(--project-sand, #D8C5A5);
+    border-color: var(--project-sand, var(--color-sand));
     box-shadow: 0 10px 25px rgba(48, 55, 70, 0.09);
 }
 
@@ -919,7 +913,7 @@ section {
 /* Nombre del grupo */
 
 .research-card h3 {
-    color: var(--page-text, #303746);
+    color: var(--page-text, var(--text-primary));
     font-family: "Poppins", sans-serif;
     font-size: 1.02rem;
     font-weight: 600;
@@ -932,7 +926,7 @@ section {
 /* Descripción */
 
 .research-card p {
-    color: var(--page-muted, #697386);
+    color: var(--page-muted, var(--text-muted));
     font-family: "Inter", sans-serif;
     font-size: 0.9rem;
     line-height: 1.7;
@@ -951,7 +945,7 @@ section {
 
     margin-top: auto;
 
-    color: var(--project-terracotta, #A65F50);
+    color: var(--project-terracotta, var(--color-terracotta));
     font-family: "Inter", sans-serif;
     font-size: 0.88rem;
     font-weight: 700;
@@ -961,7 +955,7 @@ section {
 }
 
 .research-link:hover {
-    color: var(--project-ochre, #B87943);
+    color: var(--project-ochre, var(--color-ochre));
     gap: 12px;
 }
 
@@ -1005,33 +999,8 @@ section {
    TARJETAS DE INVESTIGACIÓN - MODO OSCURO
 ===================================== */
 
-/* Tema claro */
 .research-card {
-    background-color: #FFFFFF;
-}
-
-/* Tema oscuro */
-:root[data-theme="dark"] .research-card {
-    background-color: #222936;
-    border-color: rgba(216, 197, 165, 0.18);
-}
-
-/* Texto en tema oscuro */
-:root[data-theme="dark"] .research-card h3 {
-    color: #E9EAF0;
-}
-
-:root[data-theme="dark"] .research-card p {
-    color: #AAB2C0;
-}
-
-/* Enlaces en tema oscuro */
-:root[data-theme="dark"] .research-link {
-    color: #D8C5A5;
-}
-
-:root[data-theme="dark"] .research-link:hover {
-    color: #B87943;
+    background-color: var(--surface);
 }
 
 
@@ -1199,33 +1168,32 @@ section {
     opacity: 1;
 }
 
-/* Modo oscuro */
+/* Adaptación del carrusel de certificados a los temas */
 
-:root[data-theme="dark"] .certificate-image {
-    background-color: #222936;
-    border-color: rgba(216, 197, 165, 0.18);
+.certificate-image {
+    background: var(--page-surface);
+    border-color: var(--page-border);
 }
 
-:root[data-theme="dark"] .certificate-arrow {
-    background-color: #222936;
-    color: #D8C5A5;
-    border-color: rgba(216, 197, 165, 0.2);
+.certificate-arrow {
+    background: var(--page-surface);
+    color: var(--text-primary);
+    border-color: var(--page-border);
 }
 
-:root[data-theme="dark"] .certificate-arrow:hover {
-    background-color: var(--project-blue);
-    color: #FFFFFF;
+.certificate-arrow:hover {
+    background: var(--project-blue);
+    color: var(--text-primary);
 }
 
-:root[data-theme="dark"] .certificate-dot {
-    background: #AAB2C0;
+.certificate-dot {
+    background: var(--text-muted);
 }
 
-:root[data-theme="dark"] .certificate-dot.active {
-    background: #D8C5A5;
+.certificate-dot.active {
+    background: var(--project-ochre);
     opacity: 1;
 }
-
 /* Responsive */
 
 @media (max-width: 900px) {
@@ -1341,7 +1309,7 @@ section {
     border-color: var(--project-sand);
 
     box-shadow:
-        0 12px 28px rgba(74, 83, 109, 0.10);
+        0 12px 28px var(--shadow);
 }
 
 /* Iconos */

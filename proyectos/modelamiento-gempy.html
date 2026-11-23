@@ -17,28 +17,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --project-blue: #4A536D;
-      --project-sand: #D8C5A5;
-      --project-ochre: #B87943;
-      --project-terracotta: #A65F50;
-      --project-moss: #687C62;
-      --page-background: #F4F2ED;
-      --page-surface: #FFFFFF;
-      --page-text: #303746;
-      --page-muted: #697386;
-      --page-border: rgba(74, 83, 109, 0.16);
-    }
-
-    :root[data-theme="dark"] {
-      --page-background: #171B24;
-      --page-surface: #222936;
-      --page-text: #E9EAF0;
-      --page-muted: #AAB2C0;
-      --page-border: rgba(216, 197, 165, 0.18);
-    }
-
-    * { box-sizing: border-box; }
+* { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -168,7 +147,7 @@
       width: 32px;
       height: 32px;
       border-radius: 9px;
-      background: rgba(184,121,67,.14);
+      background: color-mix(in srgb, var(--color-ochre) 14%, transparent);
       color: var(--project-ochre);
       font-family: "JetBrains Mono", monospace;
       font-weight: 600;
@@ -208,7 +187,7 @@
     .model-select-button:hover { transform: translateY(-2px); border-color: var(--project-ochre); }
     .model-select-button.active {
       border: 2px solid var(--project-ochre);
-      background: rgba(184,121,67,.08);
+      background: color-mix(in srgb, var(--color-ochre) 8%, transparent);
     }
     .model-select-number {
       display: block;
@@ -291,7 +270,7 @@
       justify-content: center;
       overflow: hidden;
       border-radius: 10px;
-      background: #ECEBE7;
+      background: var(--surface);
       border: 1px solid var(--page-border);
     }
     .model-image-frame img {
@@ -310,7 +289,7 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      color: #656565;
+      color: var(--text-secondary);
       gap: 10px;
     }
     .model-image-placeholder .placeholder-icon { font-size: 2rem; opacity: .65; }
@@ -341,7 +320,7 @@
       align-items: center;
       justify-content: center;
       border-radius: 10px;
-      background: rgba(104,124,98,.14);
+      background: color-mix(in srgb, var(--color-moss) 14%, transparent);
       color: var(--project-moss);
       font-size: 1.3rem;
     }
@@ -372,7 +351,7 @@
       margin-top: 20px;
       padding: 15px 18px;
       border-left: 3px solid var(--project-ochre);
-      background: rgba(184,121,67,.08);
+      background: color-mix(in srgb, var(--color-ochre) 8%, transparent);
       border-radius: 0 8px 8px 0;
       color: var(--page-muted);
       font-size: .85rem;

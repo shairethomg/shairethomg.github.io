@@ -1,63 +1,111 @@
 
 /* =========================================================
    PORTAFOLIO PROFESIONAL — SHAIRETH CARVAJAL
-   FASE 2 | BLOQUE 2.2 | SISTEMA DE TEMAS
+   SISTEMA DE TEMAS — NUEVA PALETA
    ========================================================= */
 
-/* 1. MODO CLARO */
+/* 1. PALETA GLOBAL */
+:root {
+    --palette-plum: #29263D;
+    --palette-mauve: #5D536B;
+    --palette-dusty-rose: #B08B8B;
+    --palette-peach: #E8B6A8;
+    --palette-blush: #F2D3C2;
+    --palette-cream: #F7EDE2;
+}
+
+/* 2. MODO CLARO */
 :root,
 :root[data-theme="light"] {
 
     color-scheme: light;
 
     /* Fondos */
-    --background: #F4F2ED;
-    --surface: #FFFFFF;
-    --header-background: rgba(255, 255, 255, 0.96);
-    --hero-accent: rgba(216, 197, 165, 0.28);
+    --background: #F7EDE2;
+    --surface: #FFF9F4;
+    --header-background: rgba(255, 249, 244, 0.96);
+    --hero-accent: rgba(232, 182, 168, 0.30);
 
     /* Textos */
-    --text-primary: #252B38;
-    --text-secondary: #596170;
-    --text-muted: #818895;
+    --text-primary: #29263D;
+    --text-secondary: #5D536B;
+    --text-muted: #897D89;
 
     /* Bordes y sombras */
-    --border: #E2DFD7;
-    --shadow: rgba(35, 43, 58, 0.10);
+    --border: rgba(93, 83, 107, 0.16);
+    --shadow: rgba(41, 38, 61, 0.10);
+
+    /* Colores de identidad */
+    --color-primary: #5D536B;
+    --color-sand: #F2D3C2;
+    --color-ochre: #B08B8B;
+    --color-terracotta: #B08B8B;
+    --color-moss: #5D536B;
 
     /* Estados */
-    --status-background: #E8EEE5;
-    --status-text: #53694D;
-}
+    --status-background: #F2D3C2;
+    --status-text: #5D536B;
 
-/* 2. MODO OSCURO */
+    /* Alias de compatibilidad para páginas y componentes heredados */
+    --page-background: var(--background);
+    --page-surface: var(--surface);
+    --page-text: var(--text-primary);
+    --page-muted: var(--text-muted);
+    --page-border: var(--border);
+    --project-blue: var(--color-primary);
+    --project-sand: var(--color-sand);
+    --project-ochre: var(--color-ochre);
+    --project-terracotta: var(--color-terracotta);
+    --project-moss: var(--color-moss);
+}
+/* 3. MODO OSCURO */
 :root[data-theme="dark"] {
 
     color-scheme: dark;
 
     /* Fondos */
-    --background: #171B24;
-    --surface: #202632;
-    --header-background: rgba(32, 38, 50, 0.97);
-    --hero-accent: rgba(74, 83, 109, 0.25);
+    --background: #29263D;
+    --surface: #353047;
+    --header-background: rgba(41, 38, 61, 0.97);
+    --hero-accent: rgba(176, 139, 139, 0.20);
 
     /* Textos */
-    --text-primary: #F0F1F3;
-    --text-secondary: #C0C5CF;
-    --text-muted: #929AA8;
+    --text-primary: #F7EDE2;
+    --text-secondary: #E0D2D7;
+    --text-muted: #B8AAB9;
 
     /* Bordes y sombras */
-    --border: #343D4D;
-    --shadow: rgba(0, 0, 0, 0.25);
+    --border: rgba(232, 182, 168, 0.18);
+    --shadow: rgba(0, 0, 0, 0.28);
+
+    /* Colores de identidad */
+    --color-primary: #5D536B;
+    --color-sand: #F2D3C2;
+    --color-ochre: #E8B6A8;
+    --color-terracotta: #B08B8B;
+    --color-moss: #B08B8B;
 
     /* Estados */
-    --status-background: #303E32;
-    --status-text: #B7CEAE;
+    --status-background: #5D536B;
+    --status-text: #F2D3C2;
+
+    /* Alias de compatibilidad para páginas y componentes heredados */
+    --page-background: var(--background);
+    --page-surface: var(--surface);
+    --page-text: var(--text-primary);
+    --page-muted: var(--text-muted);
+    --page-border: var(--border);
+    --project-blue: var(--color-primary);
+    --project-sand: var(--color-sand);
+    --project-ochre: var(--color-ochre);
+    --project-terracotta: var(--color-terracotta);
+    --project-moss: var(--color-moss);
 }
 
-/* 3. DETECCIÓN INICIAL DEL TEMA DEL SISTEMA
-   Se aplica únicamente cuando JavaScript todavía
-   no ha establecido una preferencia explícita. */
+
+/* 4. DETECCIÓN AUTOMÁTICA DEL TEMA DEL SISTEMA
+   Se aplica únicamente cuando JavaScript no ha
+   establecido una preferencia explícita. */
 
 @media (prefers-color-scheme: dark) {
 
@@ -65,19 +113,41 @@
 
         color-scheme: dark;
 
-        --background: #171B24;
-        --surface: #202632;
-        --header-background: rgba(32, 38, 50, 0.97);
-        --hero-accent: rgba(74, 83, 109, 0.25);
+        /* Fondos */
+        --background: #29263D;
+        --surface: #353047;
+        --header-background: rgba(41, 38, 61, 0.97);
+        --hero-accent: rgba(176, 139, 139, 0.20);
 
-        --text-primary: #F0F1F3;
-        --text-secondary: #C0C5CF;
-        --text-muted: #929AA8;
+        /* Textos */
+        --text-primary: #F7EDE2;
+        --text-secondary: #E0D2D7;
+        --text-muted: #B8AAB9;
 
-        --border: #343D4D;
-        --shadow: rgba(0, 0, 0, 0.25);
+        /* Bordes y sombras */
+        --border: rgba(232, 182, 168, 0.18);
+        --shadow: rgba(0, 0, 0, 0.28);
 
-        --status-background: #303E32;
-        --status-text: #B7CEAE;
+        /* Colores de identidad */
+        --color-primary: #5D536B;
+        --color-sand: #F2D3C2;
+        --color-ochre: #E8B6A8;
+        --color-terracotta: #B08B8B;
+        --color-moss: #B08B8B;
+
+        /* Estados */
+        --status-background: #5D536B;
+        --status-text: #F2D3C2;
+
+        --page-background: var(--background);
+        --page-surface: var(--surface);
+        --page-text: var(--text-primary);
+        --page-muted: var(--text-muted);
+        --page-border: var(--border);
+        --project-blue: var(--color-primary);
+        --project-sand: var(--color-sand);
+        --project-ochre: var(--color-ochre);
+        --project-terracotta: var(--color-terracotta);
+        --project-moss: var(--color-moss);
     }
 }
