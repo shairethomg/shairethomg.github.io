@@ -16,7 +16,7 @@
 
   <style>
 body { background:var(--page-background); color:var(--page-text); font-family:"Inter",sans-serif; }
-    .detail-page { width:min(1080px,90%); margin:0 auto; padding:28px 0 42px; }
+    .detail-page { --color-red:#dc3545; --color-orange:#fd7e14; --color-green:#198754; width:min(1080px,90%); margin:0 auto; padding:28px 0 42px; }
     .detail-topbar { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:34px; }
     .detail-back { color:var(--project-blue); text-decoration:none; font-weight:600; font-size:.92rem; }
     :root[data-theme="dark"] .detail-back { color:var(--project-sand); }
@@ -45,9 +45,9 @@ body { background:var(--page-background); color:var(--page-text); font-family:"I
     .avt-zoning h3 { color:var(--page-text); font-family:"Poppins",sans-serif; font-size:1rem; margin:0 0 8px; }
     .avt-zoning p { color:var(--page-muted); font-size:.85rem; margin:0 0 18px; }
     .avt-bar { display:flex; height:17px; overflow:hidden; border-radius:20px; background:var(--page-border); margin-bottom:16px; }
-    .avt-bar-high { width:25%; background:var(--project-terracotta); }
-    .avt-bar-medium { width:35%; background:var(--color-ochre); }
-    .avt-bar-low { width:40%; background:var(--project-moss); }
+    .avt-bar-high { width:25%; background:var(--color-red); }
+    .avt-bar-medium { width:35%; background:var(--color-orange); }
+    .avt-bar-low { width:40%; background:var(--color-green); }
     .avt-legend { display:flex; flex-wrap:wrap; gap:18px; color:var(--page-muted); font-size:.84rem; }
     .avt-legend-item { display:flex; align-items:center; gap:7px; }
     .avt-dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
@@ -281,7 +281,7 @@ body { background:var(--page-background); color:var(--page-text); font-family:"I
       </div>
 
       <div class="avt-zoning">
-        <h3>Zonificación en el área urbana</h3>
+        <h3>Zonificación de la amenaza</h3>
         <p>Distribución de las categorías de amenaza sobre un área urbana de 0,18 km².</p>
         <div class="avt-bar" role="img"
           aria-label="Amenaza alta 25 por ciento, media 35 por ciento y baja 40 por ciento">
@@ -290,9 +290,9 @@ body { background:var(--page-background); color:var(--page-text); font-family:"I
           <span class="avt-bar-low"></span>
         </div>
         <div class="avt-legend">
-          <span class="avt-legend-item"><span class="avt-dot" style="background:var(--color-terracotta)"></span>Alta · 25 %</span>
-          <span class="avt-legend-item"><span class="avt-dot" style="background:var(--color-ochre)"></span>Media · 35 %</span>
-          <span class="avt-legend-item"><span class="avt-dot" style="background:var(--color-moss)"></span>Baja · 40 %</span>
+          <span class="avt-legend-item"><span class="avt-dot" style="background:var(--color-red)"></span>Alta · 25 %</span>
+          <span class="avt-legend-item"><span class="avt-dot" style="background:var(--color-orange)"></span>Media · 35 %</span>
+          <span class="avt-legend-item"><span class="avt-dot" style="background:var(--color-green)"></span>Baja · 40 %</span>
         </div>
       </div>
     </section>
